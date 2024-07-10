@@ -1,0 +1,60 @@
+.profile{
+  display: flex; 
+  margin: 5vw 10vw; 
+}
+.profile .links{
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+}
+.profile .link{
+    border: none;
+    box-shadow: none;
+    border: 1.5px solid white;
+    background:transparent;
+    border-radius: 10px;
+    height: 2rem;
+    width: 10rem;
+    font-size: 1.2rem;
+   
+}
+.profile .link:hover{
+    background-color:  #1976d2;
+    border-color: #1976d2;
+}
+.profile .link:active{
+    background-color:  #0562bf;
+}
+
+.profile img{
+    border-radius: 10px;
+}
+
+.profile .details{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-left: 3rem;
+}
+
+.profile .details h1,h3 {
+    margin: 0px;
+    padding: 0px;
+}
+.profile .details h3 {
+   font-weight: 400;
+   font-size: 1.1rem;
+   align-content: center;
+}
+
+.relatedCourse{
+    margin: 5vw 10vw;
+    text-align: left;
+}
+
+
+
+

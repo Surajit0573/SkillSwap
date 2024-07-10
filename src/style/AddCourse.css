@@ -1,0 +1,120 @@
+.addCourse{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5vw;
+}
+.addCourseForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #31363F;
+    width: 800px;
+    height: fit-content;
+    border-radius: 10px;
+    text-align: left;
+    margin: 0px;
+    padding: 20px;
+
+}
+
+.upload{
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
+    min-height: 80px;
+    padding: 1rem;
+    margin-bottom: 20px;
+    align-items: center;
+    
+}
+
+.upload img{
+    border-radius: 10px;
+    width: 400px;
+    margin-bottom: 1rem;
+}
+
+.addLesson{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+}
+
+.lessonCard{
+    width: 500px;
+}
+
+.showLesson{
+    display: flex;
+    flex-direction: column;
+    min-width: 90%;
+    /* justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: fit-content;
+    border-radius: 10px;
+    text-align: left;
+    margin: 0px;
+    padding: 20px; */
+}
+
+.AddLessonForm{
+    min-width: 80%;
+    display: flex;
+    align-content: center;
+    justify-content: space-evenly;
+
+}
+
+.showTags{
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.oneTag{
+    display: flex;
+    background-color: rgb(60, 141, 255);
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-right: 1rem;
+    color: black;
+    border-radius: 10px;
+}
+
+.showTags button{
+    padding: 0px;
+    margin: 0px;
+    height: 1rem;
+    color: black;
+    background-color: transparent;
+    border: none;
+    margin-left: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.singleCard{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 10px;
+    background-color: #31363F;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.singleCard i{
+    color: white;
+    font-size: 1.5rem;
+    margin-right: -1rem;
+}
+
+.lessonAddButton{
+    margin-left: 2rem;
+}
