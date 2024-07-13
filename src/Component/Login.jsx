@@ -7,7 +7,6 @@ import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 export default function Login() {
-
   const styles =
   {
     '& .MuiOutlinedInput-root': {
@@ -53,6 +52,8 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
+        withCredentials : true,
         body: JSON.stringify(formData),
       });
       const result = await response.json();
@@ -62,7 +63,7 @@ export default function Login() {
         // localStorage.setItem('user', JSON.stringify(result.data));
         window.location.href = '/';
       }else if(!result.ok){
-        alert('Invalid credentials');
+        alert(result.message);
         return;
       }
     } catch (error) {

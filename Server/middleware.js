@@ -1,22 +1,30 @@
-// const List = require("./models/listings.js");
-// const Review = require("./models/reviews.js");
+if(process.env.NODE_ENV!="production"){
+    require('dotenv').config();
+  }
+const jwt = require('jsonwebtoken');
 const ExpressError = require("./utils/ExpressError.js");
 const { courseSchema, reviewSchema,userSchema,teacherSchema,profileSchema } = require("./schemaValidation.js");
+const jwtSecret=process.env.JWT_SECRET;
 
-module.exports.isLoggedin = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        // req.session.redirectUrl = req.originalUrl;
-       return res.status(403).json({message: 'You must be logged in', ok:false});
+
+module.exports.varifyJWT= async(req,res,next)=>{
+    if (!req.cookies.token) {
+        return res.status(401).json({ message: "You are not logged in", ok: false });
     }
-    next();
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "You are not logged in", ok: false });
+    }
+    try {
+        const decoded = await jwt.verify(token,jwtSecret);
+        res.payload = decoded;
+        next();
+    } catch (err) {
+        console.error(err.message);
+        return res.status(401).json({ message:"Something went Wrong in varification", ok: false });
+    }
 }
 
-// module.exports.saveurl = (req, res, next) => {
-//     if (req.session.redirectUrl) {
-//         res.locals.redirectUrl = req.session.redirectUrl;
-//     }
-//     next();
-// };
 
 // module.exports.isOwner = async (req, res, next) => {
 //     const { id } = req.params;
@@ -42,7 +50,7 @@ module.exports.isLoggedin = (req, res, next) => {
 module.exports.validateCourse = (req, res, next) => {
     let { error } = courseSchema.validate(req.body);
     if (error) {
-        console.log(error);
+        console.error(error);
         let errMsg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, errMsg);
     } else {
@@ -54,7 +62,7 @@ module.exports.validateCourse = (req, res, next) => {
 module.exports.validatereview = (req, res, next) => {
     let { error } = reviewSchema.validate(req.body);
     if (error) {
-        console.log(error);
+        console.error(error);
         let errMsg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, errMsg);
     } else {
@@ -67,7 +75,7 @@ module.exports.validatereview = (req, res, next) => {
 module.exports.validateuser = (req, res, next) => {
     let { error } = userSchema.validate(req.body);
     if (error) {
-        console.log(error);
+        console.error(error);
         let errMsg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, errMsg);
     } else {
@@ -79,7 +87,7 @@ module.exports.validateuser = (req, res, next) => {
 module.exports.validateteacher = (req, res, next) => {
     let { error } = teacherSchema.validate(req.body);
     if (error) {
-        console.log(error);
+        console.error(error);
         let errMsg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, errMsg);
     } else {
@@ -91,7 +99,7 @@ module.exports.validateteacher = (req, res, next) => {
 module.exports.validateprofile = (req, res, next) => {
     let { error } = profileSchema.validate(req.body);
     if (error) {
-        console.log(error);
+        console.error(error);
         let errMsg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, errMsg);
     } else {

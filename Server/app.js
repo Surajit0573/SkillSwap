@@ -4,13 +4,19 @@ if(process.env.NODE_ENV!="production"){
 const express = require("express");
 const cors = require('cors');
 const ExpressError = require("./utils/ExpressError.js");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser')
 const courses = require("./routes/courses.js");
 const users = require("./routes/user.js");
 const teacher = require("./routes/teacher.js");
 const profile = require("./routes/profile.js");
 const upload = require("./routes/upload.js");
 const app = express();
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:5173',
+}));
 let port = 3000;
 var methodOverride = require('method-override')
 const path = require("path");
@@ -20,6 +26,7 @@ const User=require('./models/user.js');
 app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.listen(port, () => {
   console.log(`app listening on port ${port}`);
 });

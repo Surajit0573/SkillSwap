@@ -1,18 +1,17 @@
 const express = require("express");
 const asyncWrap = require("../utils/asyncWrap.js");
 const router = express.Router({ mergeParams: true });
-const passport = require('passport');
 
 // const List = require("../models/listings.js");
 
-const {validateprofile,isLoggedin}=require("../middleware.js");
-const profileContoller=require("../controller/profile.js");
+const { validateprofile } = require("../middleware.js");
+const profileContoller = require("../controller/profile.js");
 // const { route } = require("./listings.js");
 
 //Signup
 
 router.route("/signup")
-.post(validateprofile, asyncWrap(profileContoller.signupForm));
+    .post(validateprofile, asyncWrap(profileContoller.signupForm));
 
 // router.route('/:id')
 // .get(asyncWrap(teacherContoller.getTeach));

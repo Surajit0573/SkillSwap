@@ -19,7 +19,10 @@ export default function Navbar() {
   const handleLogout = async () => {
     // Handle user logout
     try {
-      const response = await fetch('http://localhost:3000/api/user/logout');
+      const response = await fetch('http://localhost:3000/api/user/logout',{
+        credentials: "include",
+        withCredentials : true,
+      });
       if (!response.ok) {
         throw new Error('Failed to logout');
       } else {

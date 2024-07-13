@@ -54,6 +54,8 @@ export default function SignUp() {
                 headers: {
                   'Content-Type': 'application/json',
                 },
+                credentials: "include",
+                withCredentials : true,
                 body: JSON.stringify(formData),
               });
               const result = await response.json();
@@ -63,7 +65,7 @@ export default function SignUp() {
                 return;
               }else if(result.ok){
                 localStorage.setItem('isLoggedIn', true);
-                window.location.href = '/';
+               
               }
             } catch (error) {
               console.error('Error:', error);
