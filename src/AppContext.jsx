@@ -3,7 +3,6 @@ import axios from 'axios';
 export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Add state for user authentication
 
     function getFileType(mimeType) {
         if (typeof mimeType !== 'string') {
@@ -56,7 +55,7 @@ export default function AppContextProvider({ children }) {
         }
     }
 
-    const value = { getUrl, deleteFile,isLoggedIn, setIsLoggedIn };
+    const value = { getUrl, deleteFile };
     return (
         <AppContext.Provider value={value}>
             {children}

@@ -39,3 +39,14 @@ module.exports.teacherSchema = Joi.object({
   linkedin: Joi.string().required()
 
 });
+
+module.exports.profileSchema = Joi.object({
+  fullname: Joi.string().required(),
+  about: Joi.string().required(),
+  dp: Joi.string().required(),
+  links: Joi.object({
+  website: Joi.string().required(),
+  twitter: Joi.string().required(),
+  linkedin: Joi.string().required(),}),
+  skills: Joi.array().items(Joi.string()).required(),
+});

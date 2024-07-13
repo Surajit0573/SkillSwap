@@ -7,7 +7,6 @@ import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 export default function Login() {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AppContext);
 
   const styles =
   {
@@ -58,11 +57,13 @@ export default function Login() {
       });
       const result = await response.json();
       console.log(result);
-      if(result.data){
-        setIsLoggedIn(true);
-        // localStorage.setItem('isLoggedIn', true);
+      if(result.ok){
+        localStorage.setItem('isLoggedIn', true);
         // localStorage.setItem('user', JSON.stringify(result.data));
         window.location.href = '/';
+      }else if(!result.ok){
+        alert('Invalid credentials');
+        return;
       }
     } catch (error) {
       console.error('Error:', error);

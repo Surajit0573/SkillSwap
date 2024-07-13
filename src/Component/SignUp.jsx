@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useState,useContext} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import '../style/SignUp.css';
 import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar';
+import { AppContext } from "../AppContext";
 export default function SignUp() {
     const styles =
         {
@@ -56,9 +57,13 @@ export default function SignUp() {
                 body: JSON.stringify(formData),
               });
               const result = await response.json();
-              if(result.Status!=200){
+              console.log(result);
+              if(!result.ok){
                 alert(result.message);
                 return;
+              }else if(result.ok){
+                localStorage.setItem('isLoggedIn', true);
+                window.location.href = '/';
               }
             } catch (error) {
               console.error('Error:', error);
