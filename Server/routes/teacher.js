@@ -5,34 +5,16 @@ const router = express.Router({ mergeParams: true });
 
 // const List = require("../models/listings.js");
 
-const {validateteacher}=require("../middleware.js");
+const {validateteacher, varifyJWT}=require("../middleware.js");
 const teacherContoller=require("../controller/teacher.js");
 // const { route } = require("./listings.js");
 
 //Signup
+router.get("/info",varifyJWT,asyncWrap(teacherContoller.info));
+router.post("/signup",varifyJWT,validateteacher, asyncWrap(teacherContoller.signupForm));
 
-router.route("/signup")
-.post(validateteacher, asyncWrap(teacherContoller.signupForm));
+// router.route('/:id')
+// .get(asyncWrap(teacherContoller.getTeach));
 
-router.route('/:id')
-.get(asyncWrap(teacherContoller.getTeach));
-//Login
-// router.route("/login")
-// .get(asyncWrap(userContoller.loginForm))
-// .post( saveurl,passport.authenticate('local', { failureRedirect: '/api/user/login' }), asyncWrap(userContoller.login));
-
-// //logout
-// router.get("/logout", userContoller.logout);
-
-
-// //Error Handle
-// router.use((err, req, res, next) => {
-//     let { status = 500, message = "Something Went Wrong" } = err;
-//     if (message == "A user with the given username is already registered") {
-//         req.flash("error", message);
-//         res.redirect("/signup");
-//     }
-//     next();
-// });
 
 module.exports = router;

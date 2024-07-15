@@ -4,16 +4,17 @@ if(process.env.NODE_ENV!="production"){
 const jwt = require('jsonwebtoken');
 const ExpressError = require("./utils/ExpressError.js");
 const { courseSchema, reviewSchema,userSchema,teacherSchema,profileSchema } = require("./schemaValidation.js");
+const { redirect } = require('react-router-dom');
 const jwtSecret=process.env.JWT_SECRET;
 
 
 module.exports.varifyJWT= async(req,res,next)=>{
     if (!req.cookies.token) {
-        return res.status(401).json({ message: "You are not logged in", ok: false });
+        return res.status(401).json({ message: "You are not logged in", ok: false, redirect:'/login' });
     }
     const token = req.cookies.token;
-    if (!token) {
-        return res.status(401).json({ message: "You are not logged in", ok: false });
+    if (!token||token.length==0) {
+        return res.status(401).json({ message: "You are not logged in", ok: false,redirect:'/login' });
     }
     try {
         const decoded = await jwt.verify(token,jwtSecret);
@@ -21,7 +22,7 @@ module.exports.varifyJWT= async(req,res,next)=>{
         next();
     } catch (err) {
         console.error(err.message);
-        return res.status(401).json({ message:"Something went Wrong in varification", ok: false });
+        return res.status(401).json({ message:"Something went Wrong in varification", ok: false,redirect:null});
     }
 }
 

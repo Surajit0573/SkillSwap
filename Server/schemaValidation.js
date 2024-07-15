@@ -31,13 +31,9 @@ module.exports.userSchema = Joi.object({
 
 
 module.exports.teacherSchema = Joi.object({
-  name: Joi.string().required(),
-  designation: Joi.string().required(),
-  about: Joi.string().required(),
-  website: Joi.string().required(),
-  twitter: Joi.string().required(),
-  linkedin: Joi.string().required()
-
+  domain: Joi.string().required(),
+  qualifications: Joi.string().required(),
+  yoe: Joi.number().required(),
 });
 
 module.exports.profileSchema = Joi.object({

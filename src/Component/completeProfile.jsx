@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import '../style/AddCourse.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { AppContext } from "../AppContext";
 const VisuallyHiddenInput = styled('input')({
@@ -22,20 +22,51 @@ const VisuallyHiddenInput = styled('input')({
 });
 export default function AddProfile() {
     const navigate = useNavigate();
+    const [heading, setHeading] = useState("Complete Your Profile");
     const [profile, setProfile] = useState({
         fullname: '',
         about: '',
     });
-    const [links,setLinks]=useState({
-       website: '',
+    const [links, setLinks] = useState({
+        website: '',
         linkedin: '',
         twitter: '',
     });
-    const { getUrl,deleteFile } = useContext(AppContext);
+    const { getUrl, deleteFile } = useContext(AppContext);
     const [file, setFile] = useState(null);
     const [url, setUrl] = useState('');
     const [skills, setSkills] = useState([]);
     const [skill, setSkill] = useState('');
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await fetch('http://localhost:3000/api/user/profile', {
+                method: 'GET',
+                credentials: "include",
+                withCredentials: true,
+            });
+            const result = await response.json();
+            if (result.ok) {
+                console.log(result);
+                setProfile({
+                    fullname: result.data.fullname,
+                    about: result.data.about
+                })
+                setLinks({
+                    website: result.data.links.website,
+                    linkedin: result.data.links.linkedin,
+                    twitter: result.data.links.twitter,
+                });
+                setSkills(result.data.skills);
+                setUrl(result.data.dp);
+                setHeading("Update Your Profile");
+            } else {
+                console.log(result.message);
+            }
+        }
+        fetchData();
+    }, [])
+
     const styles =
     {
         '& .MuiOutlinedInput-root': {
@@ -67,11 +98,11 @@ export default function AddProfile() {
 
     useEffect(() => {
         async function update() {
-                const currUrl = await getUrl(file);
-                console.log(currUrl);
-                setUrl(currUrl);
+            const currUrl = await getUrl(file);
+            console.log(currUrl);
+            setUrl(currUrl);
         }
-        if(file!=null){
+        if (file != null) {
             update();
         }
     }, [file]);
@@ -109,10 +140,22 @@ export default function AddProfile() {
         // console.log( profile, links, skills,url);
         try {
             // Send the POST request with the file
-            const response = await axios.post('http://localhost:3000/api/user/profile/signup/', { fullname:profile.fullname,about:profile.about, links, skills,dp:url});
-            console.log(response);
-            // navigate('/studentProfile');
-
+            const response = await fetch('http://localhost:3000/api/user/profile/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                withCredentials: true,
+                body: JSON.stringify({ fullname: profile.fullname, about: profile.about, links, skills, dp: url })
+            });
+            const result = await response.json();
+            console.log(result);
+            if (result.ok) {
+                navigate(-1);
+            } else {
+                alert("Something went wrong. Please try again !!");
+            }
         } catch (error) {
             console.error('Error uploading file:', error);
         }
@@ -121,11 +164,11 @@ export default function AddProfile() {
         <>
             <Navbar />
             <div className="addCourse">
-                <h1 className="text-3xl m-4">Complete Your Profile</h1>
+                <h1 className="text-3xl m-4">{heading}</h1>
                 <div className="addCourseForm">
-                    <TextField id="outlined-basic" name="fullname" value={profile.fullname} onChange={handleChange} label='Full Name' variant="outlined" sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-multiline-static" name="about" value={profile.about} onChange={handleChange} label="Write something about you" multiline rows={3} sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-basic" name="skills" value={skill} onChange={(e) => setSkill(e.target.value)} onKeyDown={addSkill}  label='Add Skills' variant="outlined" sx={styles} className='inputtext'/>
+                    <TextField id="outlined-basic" name="fullname" value={profile.fullname} onChange={handleChange} label='Full Name' variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-multiline-static" name="about" value={profile.about} onChange={handleChange} label="Write something about you" multiline rows={3} sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="skills" value={skill} onChange={(e) => setSkill(e.target.value)} onKeyDown={addSkill} label='Add Skills' variant="outlined" sx={styles} className='inputtext' />
                     <div className="showTags">
                         {skills.map((t, index) => (<div key={index} className="oneTag">{t}<button name={t} onClick={deleteSkill}><i name={t} className="fa-solid fa-xmark flex self-center"></i></button></div>))}
                     </div>
@@ -145,10 +188,10 @@ export default function AddProfile() {
                             <VisuallyHiddenInput type="file" />
                         </Button>
                     </div>
-                    <TextField id="outlined-basic" name="website" value={links.website} onChange={handleLinkChange} label='Website Link' variant="outlined" sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-basic" name="twitter" value={links.twitter} onChange={handleLinkChange} label='Twitter Link' variant="outlined" sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-basic" name="linkedin" value={links.linkedin} onChange={handleLinkChange} label='Linkedin Link' variant="outlined" sx={styles} className='inputtext' required/>
-                    <Button type='submit' onClick={handleSubmit} disabled={!((url!='')&&(skills.length>0))} variant="contained" size="medium">SAVE</Button>
+                    <TextField id="outlined-basic" name="website" value={links.website} onChange={handleLinkChange} label='Website Link' variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="twitter" value={links.twitter} onChange={handleLinkChange} label='Twitter Link' variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="linkedin" value={links.linkedin} onChange={handleLinkChange} label='Linkedin Link' variant="outlined" sx={styles} className='inputtext' required />
+                    <Button type='submit' onClick={handleSubmit} disabled={!((url != '') && (skills.length > 0))} variant="contained" size="medium">SAVE</Button>
                 </div>
             </div>
         </>
