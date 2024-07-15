@@ -18,13 +18,13 @@ module.exports.getProfile = async (req, res, next) => {
             const user = await User.findById(id);
             if (user) {
                 const profile = await Profile.findById(user.profile);
-                return res.status(200).json({ ok: true, message:"Update Your Profile", data: profile });
+                return res.status(200).json({ ok: true, message: "Update Your Profile", data: profile });
             }
         } catch (e) {
             console.error(e);
             return res.status(500).json({ ok: false, message: "Server error" });
         }
-    }else{
+    } else {
         return res.status(403).json({ ok: false, message: "Profile not complete" });
     }
 };
@@ -34,7 +34,7 @@ module.exports.updateProfile = async (req, res, next) => {
     const { fullname, dp, about, skills, links } = req.body;
     const newProfile = await Profile.create({ fullname, dp, about, skills, links });
     const user = await User.findByIdAndUpdate(id, { $set: { profile: newProfile._id, isComplete: true } }, { new: true });
-    
+
     try {
         const user = await User.findById(id);
         const payload = {
@@ -43,25 +43,33 @@ module.exports.updateProfile = async (req, res, next) => {
             type: user.type,
             isComplete: user.isComplete
         }
+        console.log("Iam here too: ", payload);
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: '24h'
         });
         res.clearCookie("token", options);
         res.cookie("token", token, options);
 
-    return res.status(200).json({ ok: true, message: "Profile updated successfully", data: newProfile });
+        return res.status(200).json({ ok: true, message: "Profile updated successfully", data: newProfile });
 
-    }catch(e){
+    } catch (e) {
         console.error(e);
         return res.status(500).json({ ok: false, message: "Server error" });
     }
 };
 
-module.exports.dashboard= async (req,res,next)=>{
+module.exports.dashboard = async (req, res, next) => {
     const { id, type, isComplete } = res.payload;
-    const user =await User.findById(id).populate('teacher').populate('profile');
-    if(!user){
-        return res.status(500).json({ok: false, message: "Something went wrong"});
+    const user = await User.findById(id).populate({
+        path: 'teacher',
+        populate: {
+            path: 'courses',
+            model: 'Course'
+        }
+    }).populate('profile');
+    if (!user) {
+        return res.status(500).json({ ok: false, message: "Something went wrong" });
     }
-    return res.status(200).json({ok: true, message:`Welcome ${type}`, data: user });
+    user.password = undefined;
+    return res.status(200).json({ ok: true, message: `Welcome ${type}`, data: user });
 };

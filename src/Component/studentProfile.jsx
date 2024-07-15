@@ -6,45 +6,34 @@ import Content from "./Home/Content";
 import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { NavLink } from "react-router-dom";
-export default function Profile() {
-    const [data, setData] = useState(null);
-    const id = '667a45159d9762c4c5398d82';
-    useEffect(() => {
-        async function fetchData() {
-            const response = await fetch(`http://localhost:3000/api/user/teacher/${id}`);
-            const {data} = await response.json();
-            if (data) {
-                setData(data);
-            }
-        }
-        fetchData();
-    }, []);
+export default function StudentProfile({ options }) {
+    console.log(options);
+    const [data, setData] = useState(options);
 
     return (
         <>
             <Navbar />
-            <div className="profile">
-                <div className="links">
-                    <img src="https://img-b.udemycdn.com/user/200_H/31334738_a13c_3.jpg" />
-                    <a src={data&&data.links.website}><button className="link"><i className="fa-solid fa-link"></i> Website</button></a>
-                    <a src={data&&data.links.twitter}><button className="link"><i className="fa-brands fa-x-twitter"></i> Twitter</button></a>
-                    <a src={data&&data.links.linkedin}><button className="link"><i className="fa-brands fa-linkedin"></i> Linkedin</button></a>
-                    <NavLink to={"/completeProfile"}><button className="bg-blue-600 p-2 text-xl rounded-xl">Complete Your Profile</button></NavLink>
+            <div className="profile h-fit">
+                <div className="links h-fit">
+                    <img src={data && data.profile.dp} />
+                    <NavLink to={data && data.profile.links.website}><button className="link"><i className="fa-solid fa-link mb-4"></i> Website</button></NavLink>
+                    <NavLink to={data && data.profile.links.twitter}><button className="link"><i className="fa-brands fa-x-twitter"></i> Twitter</button></NavLink>
+                    <NavLink to={data && data.profile.links.linkedin}><button className="link"><i className="fa-brands fa-linkedin"></i> Linkedin</button></NavLink>
+
                 </div>
-                <div className="details">
-                    <p>LEARNER</p>
-                    <h1>{data&&data.name}, {data&&data.designation}</h1>
-                    <h3><Rating name="half-rating-read" defaultValue={data&&data.rating} precision={0.5} readOnly /> (4500)</h3>
-                    <h3>{data&&data.follower} Followers</h3>
-                    <h2>About me</h2>
-                    <p>{data&&data.about}</p>
+                <div className="details h-fit">
+                    <p className="font-semibold">LEARNER</p>
+                    <h1 className="text-5xl font-semibold my-4">{data && data.profile.fullname}</h1>
+                    {/* <h3 className="text-2xl mb-2"><Rating name="half-rating-read" defaultValue={data && data.profile.rating} precision={0.5} readOnly /> (4500)</h3> */}
+                    {/* <h3 className="text-xl mb-2">{data && data.profile.follower} Followers</h3> */}
+                    <h2 className="text-3xl font-semibold my-2">About me</h2>
+                    <p className="text-xl">{data && data.profile.about}</p>
                 </div>
             </div>
-            <div className="relatedCourse">
-                <h2>My courses (7)</h2>
-                <NavLink to={'/addCourse'}> <Button variant="contained" size="medium">Add Courses</Button></NavLink>
-                <Content />
-            </div>
+
+            <div className="certificate my-4">
+                    <h2 className="text-3xl font-semibold my-4">Certificates ({data.profile.certifications.length})</h2>
+                </div>
 
         </>
     )

@@ -82,7 +82,7 @@ export default function BecomeTeach() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    formData.yoe=Number(formData.yoe);
+    formData.yoe = Number(formData.yoe);
     try {
       const response = await fetch('http://localhost:3000/api/user/teacher/signup', {
         method: 'POST',
@@ -90,11 +90,24 @@ export default function BecomeTeach() {
           'Content-Type': 'application/json',
         },
         credentials: "include",
-        withCredentials : true,
+        withCredentials: true,
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      console.log(result);
+      if (!result.ok) {
+        if (result.redirect) {
+          console.log(result.message);
+          navigate(result.redirect);
+          return;
+        } else {
+          alert(result.message);
+          navigate(-1);
+          return;
+        }
+      }else{
+        console.log(result.message);
+        navigate('/profile');
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -108,8 +121,8 @@ export default function BecomeTeach() {
       <div className="signup">
         <form onSubmit={handleSubmit}>
           <div className="signup-form">
-            <h1>Come teach with us {name}</h1>
-            <p>Become an instructor and change lives — including your own</p>
+            <h1 className='text-2xl'>Come teach with us {name}</h1>
+            <p className='text-2xl m-4' >Become an instructor and change lives — including your own</p>
             <TextField id="outlined-basic" label="Domain" name='domain' value={formData.domain} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
             <TextField id="outlined-basic" label="Qualifications" name='qualifications' value={formData.qualifications} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
             <TextField id="outlined-basic" label="Year of Experience" name='yoe' value={formData.yoe} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />

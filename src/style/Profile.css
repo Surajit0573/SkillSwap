@@ -3,7 +3,6 @@
   margin: 5vw 10vw; 
 }
 .profile .links{
-    height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,10 +15,10 @@
     border: 1.5px solid white;
     background:transparent;
     border-radius: 10px;
-    height: 2rem;
-    width: 10rem;
+    height: 2.4rem;
+    width: 15rem;
     font-size: 1.2rem;
-   
+   margin: 0.5rem;
 }
 .profile .link:hover{
     background-color:  #1976d2;
@@ -31,6 +30,7 @@
 
 .profile img{
     border-radius: 10px;
+    margin-bottom: 1rem;
 }
 
 .profile .details{
@@ -40,17 +40,12 @@
     margin-left: 3rem;
 }
 
-.profile .details h1,h3 {
-    margin: 0px;
-    padding: 0px;
-}
-.profile .details h3 {
-   font-weight: 400;
-   font-size: 1.1rem;
-   align-content: center;
+.relatedCourse{
+    margin: 5vw 10vw;
+    text-align: left;
 }
 
-.relatedCourse{
+.certificate{
     margin: 5vw 10vw;
     text-align: left;
 }

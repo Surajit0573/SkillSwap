@@ -152,7 +152,7 @@ export default function AddProfile() {
             const result = await response.json();
             console.log(result);
             if (result.ok) {
-                navigate(-1);
+                navigate('/profile');
             } else {
                 alert("Something went wrong. Please try again !!");
             }

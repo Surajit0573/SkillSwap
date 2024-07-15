@@ -10,7 +10,6 @@ const profileSchema = new mongoose.Schema({
     skills: [{ type: String }],
     myCourses: [{ course:{type: Schema.Types.ObjectId, ref: 'Course'},completion:[{type:String}] }],
     certifications: [{ type: Schema.Types.ObjectId, ref: 'Certification' }],
-    follower: { type: Number, default: 0 },
     about: { type: String, required: true },
     links: {
         website: {type: String, required: true},

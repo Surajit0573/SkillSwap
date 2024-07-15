@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 export default function Card({data}) {
+    console.log(data);
     const navigate = useNavigate()
     function clickHandeler(){
         navigate("/details");

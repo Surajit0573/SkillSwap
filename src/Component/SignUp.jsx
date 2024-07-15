@@ -3,10 +3,11 @@ import {useState,useContext} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import '../style/SignUp.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate} from 'react-router-dom';
 import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 export default function SignUp() {
+  const navigate = useNavigate();
     const styles =
         {
             '& .MuiOutlinedInput-root': {
@@ -65,7 +66,7 @@ export default function SignUp() {
                 return;
               }else if(result.ok){
                 localStorage.setItem('isLoggedIn', true);
-               
+                navigate(-1);
               }
             } catch (error) {
               console.error('Error:', error);

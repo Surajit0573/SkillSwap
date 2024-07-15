@@ -13,10 +13,8 @@ const options = {
 
 module.exports.info = async (req, res) => {
     const { id, type, isComplete } = res.payload;
-    console.log(res.payload);
-    console.log("test path : ", req.originalUrl);
     if (type == "instructor") {
-        console.log("Yur are already a instructor")
+        console.log("Your are already a instructor")
         return res.status(400).json({ ok: false, message: "You are already a instructor", redirect: '/profile', data: null });
     }
     if (!isComplete) {
@@ -37,10 +35,10 @@ module.exports.info = async (req, res) => {
 
 }
 module.exports.signupForm = async (req, res) => {
-    let {id,type,isComplete}=res.payload;
-    let {domain,qualifications,yoe} = req.body;
+    let { id, type, isComplete } = res.payload;
+    let { domain, qualifications, yoe } = req.body;
     if (type == "instructor") {
-        console.log("Yur are already a instructor")
+        console.log("Your are already a instructor")
         return res.status(400).json({ ok: false, message: "You are already a instructor", redirect: '/profile', data: null });
     }
     if (!isComplete) {
@@ -54,9 +52,9 @@ module.exports.signupForm = async (req, res) => {
             return res.status(404).json({ ok: false, message: "User not found", data: null });
         }
 
-        const newteach = new Teacher({domain,qualifications,yoe,user});
+        const newteach = new Teacher({ domain, qualifications, yoe, user });
         const response = await newteach.save();
-        user=await User.findByIdAndUpdate(id,{$set:{type:"instructor",teacher:newteach}});
+        user = await User.findByIdAndUpdate(id, { $set: { type: "instructor", teacher: newteach } }, { new: true });
 
         const payload = {
             id: user._id,
@@ -64,19 +62,20 @@ module.exports.signupForm = async (req, res) => {
             type: user.type,
             isComplete: user.isComplete,
         }
+        console.log("Iam here : ", payload);
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: '24h'
         });
         user.password = undefined;
         res.clearCookie("token", options);
         res.cookie("token", token, options);
-        res.status(200).json({ ok:true,message: "congratulations, You are registered as a Teacher", data:user});
-        
+        res.status(200).json({ ok: true, message: "congratulations, You are registered as a Teacher", data: user });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ ok: false, message: "Server error", data: null });
     }
-   
+
 };
 
 // module.exports.getTeach = async (req, res, next) => {

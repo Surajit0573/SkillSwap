@@ -43,15 +43,14 @@ const coursesSchema = new mongoose.Schema({
       lessons: [
         {
           name: { type: String, required: true },
-          url: { type: String},
+          url: { type: String },
         }
       ]
     }
   ],
-  //   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  //   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  //   dislikes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  //   shares: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  teacher: { type: Schema.Types.ObjectId, ref: "User" },
+  enrolledUsers:{type:Number,default:0},
+  rating:{type:Number,default:0},
 
   //   review: [{
   //     type: Schema.Types.ObjectId,

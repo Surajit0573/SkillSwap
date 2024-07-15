@@ -22,8 +22,18 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 export default function AddLesson() {
-    const { state } = useLocation();
+    const location=useLocation();
     const navigate = useNavigate();
+    const[id,setId]=useState('');
+    useEffect(() => {
+        const { state } = location;
+        if(!(state&&state.id)){
+            navigate('/addCourse');
+            return;
+        }
+        setId(state.id);
+    },[]);
+    
     const [Section,setSection]=useState([]);
     const [title,setTitle]=useState('');
     const styles =
@@ -67,13 +77,32 @@ export default function AddLesson() {
 
     const handleCreate=async(e)=>{
         e.preventDefault();
-        const id = state.id;
-        console.log("ide",id);
         try {
             // Send the POST request with the file
             console.log(Section);
-            const response = await axios.post(`http://localhost:3000/api/courses/${id}/addLessons`, {Section});
-            navigate('/');
+            const response = await fetch(`http://localhost:3000/api/courses/${id}/addLessons`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+                withCredentials: true,
+                body: JSON.stringify({Section})
+            });
+            const result = await response.json();
+            if(!result.ok){
+                alert(result.message);
+                if(result.redirect){
+                    navigate(result.redirect);
+                    return;
+                }else{
+                    navigate(-1);
+                    return;
+                }
+            }
+            console.log(result.message);
+            navigate('/profile');
+            return;
             
 
         } catch (error) {
@@ -84,7 +113,7 @@ export default function AddLesson() {
         <>
             <Navbar />
             <div className="addCourse">
-                <h1>Add Lessons</h1>
+                <h1 className="text-4xl m-4 font-bold">Add Lessons</h1>
                 <div className="addCourseForm">
                     <div className="addLesson">
                         <TextField id="outlined-basic" onChange={handleChange} value={title} label='Add Section' variant="outlined" sx={styles} className='inputtext' />

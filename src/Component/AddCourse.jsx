@@ -30,7 +30,7 @@ export default function AddCourse() {
         benefits: '',
         requirements: '',
     });
-    const { getUrl,deleteFile } = useContext(AppContext);
+    const { getUrl, deleteFile } = useContext(AppContext);
     const [file, setFile] = useState(null);
     const [url, setUrl] = useState('');
     const [tags, setTags] = useState([]);
@@ -66,11 +66,11 @@ export default function AddCourse() {
 
     useEffect(() => {
         async function update() {
-                const currUrl = await getUrl(file);
-                console.log(currUrl);
-                setUrl(currUrl);
+            const currUrl = await getUrl(file);
+            console.log(currUrl);
+            setUrl(currUrl);
         }
-        if(file!=null){
+        if (file != null) {
             update();
         }
     }, [file]);
@@ -105,9 +105,27 @@ export default function AddCourse() {
         console.log(course);
         try {
             // Send the POST request with the file
-            const response = await axios.post('http://localhost:3000/api/courses/', { course, url, tags });
-            console.log(response);
-            navigate('/addLesson',{state:{id:response.data.data._id}});
+            const response = await fetch('http://localhost:3000/api/courses/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                withCredentials: true,
+                body: JSON.stringify({ course, url, tags }),
+            });
+            const result = await response.json();
+            if (!result.ok) {
+                console.log(result.message);
+                if (result.redirect) {
+                    navigate(result.redirect);
+                    return;
+                } else {
+                    navigate(-1);
+                    return;
+                }
+            }
+            navigate('/addLesson', { state: { id: result.data._id } });
 
         } catch (error) {
             console.error('Error uploading file:', error);
@@ -117,17 +135,17 @@ export default function AddCourse() {
         <>
             <Navbar />
             <div className="addCourse">
-                <h1>Add Course</h1>
+                <h1 className="text-4xl font-bold m-4 ">Add Course</h1>
                 <div className="addCourseForm">
-                    <TextField id="outlined-basic" name="title" value={course.title} onChange={handleChange} label='Course Tilte' variant="outlined" sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-multiline-static" name="description" value={course.description} onChange={handleChange} label="Short Description" multiline rows={3} sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-basic" name="price" label='Course Price' value={course.price} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-basic" name="category" label='Course Categoty' value={course.category} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-basic" name="tags" value={tag} onChange={addTag} label='Add Tags' variant="outlined" sx={styles} className='inputtext'/>
-                    <div className="showTags">
-                        {tags.map((t, index) => (<div key={index} className="oneTag">#{t}<button name={t} onClick={deleteTag}><i name={t} className="fa-solid fa-xmark"></i></button></div>))}
+                    <TextField id="outlined-basic" name="title" value={course.title} onChange={handleChange} label='Course Tilte' variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-multiline-static" name="description" value={course.description} onChange={handleChange} label="Short Description" multiline rows={3} sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="price" label='Course Price' value={course.price} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="category" label='Course Categoty' value={course.category} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="tags" value={tag} onChange={addTag} label='Add Tags' variant="outlined" sx={styles} className='inputtext' />
+                    <div className="showTags flex items-center flex-wrap w-[535px] ">
+                        {tags.map((t, index) => (<div key={index} className="oneTag mb-4">#{t}<button name={t} onClick={deleteTag}><i name={t} className="fa-solid fa-xmark flex"></i></button></div>))}
                     </div>
-                    <div className='upload'>
+                    <div className='upload w-[535px]'>
                         <img src={url}></img>
                         <Button
                             component="label"
@@ -143,9 +161,9 @@ export default function AddCourse() {
                             <VisuallyHiddenInput type="file" />
                         </Button>
                     </div>
-                    <TextField id="outlined-multiline-static" name="benefits" value={course.benefits} onChange={handleChange} label="Benefits" multiline rows={3} sx={styles} className='inputtext' required/>
-                    <TextField id="outlined-multiline-static" name="requirements" value={course.requirements} onChange={handleChange} label="Requirements" multiline rows={3} sx={styles} className='inputtext' required/>
-                    <Button type='submit' onClick={handleSubmit} disabled={!((url!='')&&(tags.length>0))} variant="contained" size="medium">Next</Button>
+                    <TextField id="outlined-multiline-static" name="benefits" value={course.benefits} onChange={handleChange} label="Benefits" multiline rows={3} sx={styles} className='inputtext' required />
+                    <TextField id="outlined-multiline-static" name="requirements" value={course.requirements} onChange={handleChange} label="Requirements" multiline rows={3} sx={styles} className='inputtext' required />
+                    <Button type='submit' onClick={handleSubmit} disabled={!((url != '') && (tags.length > 0))} variant="contained" size="medium">Next</Button>
                 </div>
             </div>
         </>
