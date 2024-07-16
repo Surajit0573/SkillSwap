@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-export default function LessonCard({name="Section",data=[{name:"Lesson"}]}) {
+export default function LessonCard({name,data,num}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -22,16 +22,20 @@ export default function LessonCard({name="Section",data=[{name:"Lesson"}]}) {
       component="nav"
     >
       <ListItemButton onClick={handleClick}>
-        <ListItemText primary={name} />
+        <ListItemText primary={num+". "+name} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItemButton sx={{ pl: 4 }}>
-          {data.map((d)=>(
-            <ListItemText primary={d.name} />
+          <div className='flex flex-col w-full'>
+          {data.map((d,index)=>(
+            <div className='flex my-2 justify-between'>
+            <p>{d.url.indexOf("video") > -1 ? <i className="fa-solid fa-video"></i> : <i className="fa-solid fa-file-lines"></i>}<span className='mx-4'>{d.name}</span></p>
+            <p><i class="fa-solid fa-lock mx-4"></i> 5:23 min</p>
+            </div>
           ))}
-            
+          </div>
           </ListItemButton>
         </List>
       </Collapse>

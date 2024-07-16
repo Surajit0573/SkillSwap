@@ -1,18 +1,22 @@
-export default function CourseDetails(){
-    return(
+import * as React from 'react';
+import Rating from '@mui/material/Rating';
+export default function CourseDetails({ data }) {
+    return (
         <>
             <div className="CourseDetails">
-                <img src="https://www.moople.in/blog/wp-content/uploads/2023/06/bsc-animation-course-syllabus-scope-college-details-21-06-2023.jpg"></img>
-            <div className="title">
-            <h1>Coding 101: Python for Beginners</h1>
-            <div className="info">
-                <p>by Alvin Wan, Research Scientist</p>
-                <div className="reach">
-                <p>32000 <i className="fa-regular fa-eye"></i></p>
-                <p>1000 <i className="fa-solid fa-heart"></i></p>
+                <div className="title text-left mr-16">
+                    <h1 className="text-5xl leading-[4rem] font-semibold">{data && data.title}</h1>
+                    <h3 className="text-2xl my-8"><Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.5} readOnly /> <span className='text-lg'>(4500 ratings)</span>, {data&&data.enrolledUsers} Students</h3>
+                    <p className='text-xl my-4'>Created by {data && data.teacherName}, {data && data.teacher.teacher.qualifications}</p>
+                    <p className='text-lg'>{data&&data.tags.map((t)=><span>#{t} </span>)}</p>
+                    {/* <p>Last updated{}</p> */}
                 </div>
-            </div>
-            </div>
+                <div className='bg-[#31363F] p-4 rounded-md text-left'>
+                <img className='w-96 rounded-md' src={data && data.thumbnail}></img>
+                <p className='text-3xl my-4'><i class="fa-solid fa-indian-rupee-sign"></i> {data&&data.price}</p>
+                <button className='bg-blue-600 py-2 px-4 text-2xl rounded-md'>Add to Cart</button> <button className='border-solid border-2 border-blue-600 py-1 px-4 ml-2 rounded-md'><i class="fa-regular fa-heart text-red-600 text-3xl"></i></button>
+                </div>
+               
             </div>
         </>
     )

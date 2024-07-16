@@ -3,14 +3,9 @@
     margin: 5vw;
     justify-content: space-around;
 }
-.CourseDetails img{
-    width: 400px;
-    border-radius: 10px;
-}
 
 .CourseDetails .reach{
     display: flex;
-    justify-content: center;
 }
 
 .CourseDetails .reach p{

@@ -9,6 +9,7 @@ import BecomeTeach from './Component/BecomeTeach.jsx';
 import AddCourse from './Component/AddCourse.jsx';
 import AddLesson from './Component/AddLesson.jsx';
 import CompleteProfile from './Component/completeProfile.jsx';
+import DashBoard from './Component/dashboard.jsx';
 function App() {
 
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="/addCourse" element={<AddCourse/>} />
       <Route path="/addLesson" element={<AddLesson/>} />
       <Route path="/completeProfile" element={<CompleteProfile/>} />
+      <Route path="/dashboard" element={<DashBoard/>} />
       <Route path="*" element={<h1>Page Not Found</h1>} />
     </Routes>
     </>

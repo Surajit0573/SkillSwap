@@ -15,8 +15,8 @@ router.route("/")
 router.route("/:id/addLessons")
 .post(varifyJWT,asyncWrap(coursesController.addLessons));
 
-// router.route("/:id")
-//     .get(asyncWrap(listingController.show)) //Show Route
+router.route("/:id")
+    .get(asyncWrap(coursesController.show)); //Show Route
 //     .patch(isLoggedin, isOwner,upload.single('image'), validateListing, asyncWrap(listingController.edit)) //Edit
 //     .delete(isLoggedin, isOwner, asyncWrap(listingController.delete)); //Delete 
 

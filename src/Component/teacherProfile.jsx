@@ -35,7 +35,7 @@ export default function TeacherProfile({ options }) {
                 <h2 className="text-4xl my-4 font-semibold">My courses ({data && data.teacher.courses.length})</h2>
                 <NavLink to={'/addCourse'}> <Button variant="contained" size="medium">Add Courses</Button></NavLink>
                 <div className="flex flex-wrap">
-                    {data && data.teacher.courses.map((d) => (<Card data={d} />))}
+                    {data && data.teacher.courses.map((d) => (<Card data={d}/>))}
                 </div>
             </div>
 
