@@ -131,8 +131,62 @@ module.exports.login = async (req, res) => {
 
 }
 
-module.exports.logout = (req, res, next) => {
+module.exports.logout = (req, res) => {
     res.clearCookie("token", options);
     res.status(201).json({ status: 200, massege: "Successfully logged out", ok: true, });
+
+};
+
+module.exports.changePass = async (req, res) => {
+    const {id} =res.payload;
+    try{
+        const user =await User.findById(id);
+        if(!user){
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        return res.status(200).json({ ok: true,message: "successfully found user", data:user.username});
+    }catch(e){
+        console.error(e.message);
+        return res.status(500).json({ ok: false, message: "Something went wrong" });
+    }
+
+};
+
+
+module.exports.updatePass = async (req, res) => {
+    const {id} =res.payload;
+    const { currPass,newPass } = req.body;
+    //Varifications
+    if (!currPass || !newPass) {
+        console.error("Please enter all required information");
+        return res.status(400).json({ ok: false, message: "Pleaase Provide all the required information" });
+
+    }
+    //Check if user exists
+    const user = await User.findById(id);
+    if (!user) {
+        console.error("User not found");
+        return res.status(404).json({ ok: false, message: "User not found",redirect: "/login"});
+
+    }
+    //Check if password is correct
+    const isMatch = await bcrypt.compare(currPass, user.password);
+    if (!isMatch) {
+        console.error("Incorrect password");
+        return res.status(401).json({ ok: false, message: "Incorrect password" });
+
+    }
+    try {
+        //Hash PassWord
+        const hashPassword = await bcrypt.hash(newPass, bcryptRound);
+        //Update password
+        user.password = hashPassword;
+        await user.save();
+        return res.status(200).json({ ok: true, message: "Password updated successfully" });
+    }catch(e){
+        console.error(e.message);
+        return res.status(500).json({ ok: false, message: "Something went wrong while updating password" });
+    }
 
 };

@@ -2,7 +2,6 @@ import Navbar from "./Navbar";
 import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import '../style/Profile.css';
-import Content from "./Home/Content";
 import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { NavLink } from "react-router-dom";
@@ -16,7 +15,7 @@ export default function TeacherProfile({ options }) {
             <Navbar />
             <div className="profile">
                 <div className="links">
-                    <img src={data && data.profile.dp} />
+                    <img src={data && data.profile.dp} className="w-64"/>
                     <a src={data && data.profile.links.website}><button className="link"><i className="fa-solid fa-link mb-4"></i> Website</button></a>
                     <a src={data && data.profile.links.twitter}><button className="link"><i className="fa-brands fa-x-twitter"></i> Twitter</button></a>
                     <a src={data && data.profile.links.linkedin}><button className="link"><i className="fa-brands fa-linkedin"></i> Linkedin</button></a>

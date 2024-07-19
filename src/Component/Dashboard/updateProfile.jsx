@@ -1,14 +1,13 @@
-import Navbar from "./Navbar";
 import * as React from 'react';
 import { useState, useContext, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import '../style/AddCourse.css';
+import '../../style/AddCourse.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import { AppContext } from "../AppContext";
+import { AppContext } from "../../AppContext";
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -20,7 +19,7 @@ const VisuallyHiddenInput = styled('input')({
     whiteSpace: 'nowrap',
     width: 1,
 });
-export default function AddProfile() {
+export default function UpdateProfile() {
     const navigate = useNavigate();
     const [heading, setHeading] = useState("Complete Your Profile");
     const [profile, setProfile] = useState({
@@ -162,7 +161,6 @@ export default function AddProfile() {
     }
     return (
         <>
-            <Navbar />
             <div className="addCourse">
                 <h1 className="text-3xl m-4">{heading}</h1>
                 <div className="addCourseForm">

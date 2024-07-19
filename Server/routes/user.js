@@ -8,5 +8,8 @@ const userContoller=require("../controller/user.js");
 router.post("/signup",validateuser, asyncWrap(userContoller.signup));
 router.post("/login",asyncWrap(userContoller.login));
 router.get("/logout", varifyJWT,userContoller.logout);
+router.route("/changePass")
+.get(varifyJWT,asyncWrap(userContoller.changePass))
+.post(varifyJWT,asyncWrap(userContoller.updatePass))
 
 module.exports = router;

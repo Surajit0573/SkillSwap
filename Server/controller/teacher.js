@@ -1,3 +1,4 @@
+const { redirect } = require("react-router-dom");
 const Teacher = require("../models/teacher.js");
 const User = require("../models/user.js");
 const bcrypt = require('bcrypt');
@@ -19,7 +20,7 @@ module.exports.info = async (req, res) => {
     }
     if (!isComplete) {
         console.log("Please complete your profile first")
-        return res.status(400).json({ ok: false, message: "Please complete your profile first", redirect: '/completeProfile', data: null });
+        return res.status(400).json({ ok: false, message: "Please complete your profile first", redirect: '/dashboard', data: null });
     }
     try {
         const user = await User.findById(id).populate('profile');
@@ -43,7 +44,7 @@ module.exports.signupForm = async (req, res) => {
     }
     if (!isComplete) {
         console.log("Please complete your profile first")
-        return res.status(400).json({ ok: false, message: "Please complete your profile first", redirect: '/completeProfile', data: null });
+        return res.status(400).json({ ok: false, message: "Please complete your profile first", redirect: '/dashboard', data: null });
     }
     try {
         let user = await User.findById(id);
@@ -77,6 +78,28 @@ module.exports.signupForm = async (req, res) => {
     }
 
 };
+
+module.exports.myCourses = async (req, res) => {
+    const { id, type, isComplete } = res.payload;
+    if (type != "instructor") {
+        return res.status(400).json({ ok: false, message: "You are not an instructor", redirect: '/becomeTeach', data: null });
+    }
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", redirect: '/login', data: null });
+        }
+        const teacher=await Teacher.findById(user.teacher).populate('courses');
+        if (!teacher) {
+            return res.status(400).json({ ok: false, message: "You are not an instructor", redirect: '/becomeTeach', data: null });
+        }
+        return res.status(200).json({ ok: true, message: "Your Courses fetched successfully", data: teacher.courses });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ ok: false, message: "Server error", data: null });
+    }
+}
 
 // module.exports.getTeach = async (req, res, next) => {
 //     const { id } = req.params;

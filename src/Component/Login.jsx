@@ -61,7 +61,7 @@ export default function Login() {
       console.log(result);
       if(result.ok){
         localStorage.setItem('isLoggedIn', true);
-        navigate(-1);
+        navigate('/profile');
       }else if(!result.ok){
         alert(result.message);
         return;

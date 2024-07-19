@@ -66,7 +66,7 @@ export default function SignUp() {
                 return;
               }else if(result.ok){
                 localStorage.setItem('isLoggedIn', true);
-                navigate(-1);
+                navigate('/profile');
               }
             } catch (error) {
               console.error('Error:', error);

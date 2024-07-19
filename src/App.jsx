@@ -8,8 +8,10 @@ import Profile from './Component/profile.jsx';
 import BecomeTeach from './Component/BecomeTeach.jsx';
 import AddCourse from './Component/AddCourse.jsx';
 import AddLesson from './Component/AddLesson.jsx';
-import CompleteProfile from './Component/completeProfile.jsx';
 import DashBoard from './Component/dashboard.jsx';
+import Certificate from './Component/Dashboard/certificate.jsx';
+import UpdateAccount from './Component/Dashboard/updateAccount.jsx';
+import MyCourses from './Component/Dashboard/myCourses.jsx';
 function App() {
 
   return (
@@ -23,8 +25,10 @@ function App() {
       <Route path="/becomeTeach" element={<BecomeTeach/>} />
       <Route path="/addCourse" element={<AddCourse/>} />
       <Route path="/addLesson" element={<AddLesson/>} />
-      <Route path="/completeProfile" element={<CompleteProfile/>} />
       <Route path="/dashboard" element={<DashBoard/>} />
+      <Route path="/dashboard/certificate" element={<Certificate />} />
+      <Route path="/dashboard/account" element={<UpdateAccount />} />
+      <Route path="/dashboard/myCourses" element={<MyCourses />} />
       <Route path="*" element={<h1>Page Not Found</h1>} />
     </Routes>
     </>

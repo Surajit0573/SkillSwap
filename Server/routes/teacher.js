@@ -13,6 +13,7 @@ const teacherContoller=require("../controller/teacher.js");
 router.get("/info",varifyJWT,asyncWrap(teacherContoller.info));
 router.post("/signup",varifyJWT,validateteacher, asyncWrap(teacherContoller.signupForm));
 
+router.get("/myCourses",varifyJWT, asyncWrap(teacherContoller.myCourses));
 // router.route('/:id')
 // .get(asyncWrap(teacherContoller.getTeach));
 

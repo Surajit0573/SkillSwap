@@ -9,6 +9,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { AppContext } from "../AppContext";
+import Sidebar from "./Dashboard/sidebar";
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -133,8 +134,14 @@ export default function AddCourse() {
     }
     return (
         <>
+         <div>
             <Navbar />
-            <div className="addCourse">
+            <div className="h-[90vh] flex justify-between">
+            <div>
+                <Sidebar />
+                </div>
+                <div className="overflow-y-scroll flex-grow flex-wrap ">
+                <div className="addCourse">
                 <h1 className="text-4xl font-bold m-4 ">Add Course</h1>
                 <div className="addCourseForm">
                     <TextField id="outlined-basic" name="title" value={course.title} onChange={handleChange} label='Course Tilte' variant="outlined" sx={styles} className='inputtext' required />
@@ -165,7 +172,13 @@ export default function AddCourse() {
                     <TextField id="outlined-multiline-static" name="requirements" value={course.requirements} onChange={handleChange} label="Requirements" multiline rows={3} sx={styles} className='inputtext' required />
                     <Button type='submit' onClick={handleSubmit} disabled={!((url != '') && (tags.length > 0))} variant="contained" size="medium">Next</Button>
                 </div>
+            </div>          
+                </div>
+              
             </div>
+        </div>
+
+           
         </>
     )
 }

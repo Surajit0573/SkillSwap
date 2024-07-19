@@ -9,7 +9,7 @@ const profileSchema = new mongoose.Schema({
     dp: { type: String,default:'' },
     skills: [{ type: String }],
     myCourses: [{ course:{type: Schema.Types.ObjectId, ref: 'Course'},completion:[{type:String}] }],
-    certifications: [{ type: Schema.Types.ObjectId, ref: 'Certification' }],
+    certifications: [String],
     about: { type: String, required: true },
     links: {
         website: {type: String, required: true},

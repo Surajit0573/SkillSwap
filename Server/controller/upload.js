@@ -27,12 +27,11 @@ module.exports.video = async (req, res) => {
 
 module.exports.delete = async (req, res) => {
   const { publicId, type } = req.body;
-  console.log("ULLU", publicId, type);
   let response;
   if (type == "video") {
     response = cloudinary.uploader.destroy(`${type}/${publicId}`,{resource_type:'video'});
   } else {
     response = cloudinary.uploader.destroy(`${type}/${publicId}`);
   }
-  res.send(200).json({ response })
+  res.status(200).json({ response })
 };

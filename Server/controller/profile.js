@@ -1,3 +1,4 @@
+const { redirect } = require("react-router-dom");
 const Profile = require("../models/profile.js");
 const User = require("../models/user.js");
 const bcrypt = require('bcrypt');
@@ -72,4 +73,34 @@ module.exports.dashboard = async (req, res, next) => {
     }
     user.password = undefined;
     return res.status(200).json({ ok: true, message: `Welcome ${type}`, data: user });
+};
+
+module.exports.getCertificate = async (req, res) => {
+    const { id } = res.payload;
+    const user = await User.findById(id).populate('profile');
+    if (!user) {
+        return res.status(500).json({ ok: false, message: "Something went wrong",redirect:'/login' });
+    }
+    return res.status(200).json({ ok: true, message: `Certificates Fetchs successfully`, data: user.profile.certifications });
+};
+
+module.exports.updateCertificate = async (req, res) => {
+    const { id } = res.payload;
+    const {url}=req.body;
+    try{
+    if(!url||url.length<=0){
+        return res.status(400).json({ok:false,message:"Select a Valid File"});
+    }
+    const user = await User.findById(id).populate('profile');
+    if (!user) {
+        return res.status(500).json({ ok: false, message: "Something went wrong",redirect:'/login' });
+    }
+    let newCertificates=user.profile.certifications;
+    newCertificates.push(url);
+    const profile=await Profile.findByIdAndUpdate(user.profile._id,{$set:{certifications:[...newCertificates]}},{new:true})
+    return res.status(200).json({ ok: true, message: `Certificates Added successfully`, data: user.profile.certifications });
+    }catch(e){
+        console.error(e);
+        return res.status(500).json({ ok: false, message: "Server error" });
+    }
 };

@@ -15,7 +15,7 @@ export default function StudentProfile({ options }) {
             <Navbar />
             <div className="profile h-fit">
                 <div className="links h-fit">
-                    <img src={data && data.profile.dp} />
+                    <img src={data && data.profile.dp} className="w-64"/>
                     <NavLink to={data && data.profile.links.website}><button className="link"><i className="fa-solid fa-link mb-4"></i> Website</button></NavLink>
                     <NavLink to={data && data.profile.links.twitter}><button className="link"><i className="fa-brands fa-x-twitter"></i> Twitter</button></NavLink>
                     <NavLink to={data && data.profile.links.linkedin}><button className="link"><i className="fa-brands fa-linkedin"></i> Linkedin</button></NavLink>

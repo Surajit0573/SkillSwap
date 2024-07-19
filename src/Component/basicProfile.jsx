@@ -15,8 +15,6 @@ export default function BasicProfile({ options }) {
             <div className="profile">
                 <div className="links">
                     <img src={`https://api.multiavatar.com/${data&&data.username}.png`} className="w-60"/>
-                   <NavLink to={'/completeProfile'}><button className="bg-blue-600 p-4 text-xl rounded-md">Complete Your Profile</button></NavLink>
-
                 </div>
                 <div className="details ">
                     <p className="font-semibold">LEARNER</p>
