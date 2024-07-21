@@ -23,6 +23,17 @@ const VisuallyHiddenInput = styled('input')({
 });
 export default function AddCourse() {
     const navigate = useNavigate();
+    const { isLoggedin } = useContext(AppContext);
+    useEffect(() => {
+        async function fetchData() {
+            const curr = await isLoggedin();
+            if (!curr) {
+                alert("You are not logged in");
+                navigate('/login');
+            }
+        }
+        fetchData();
+    }, []);
     const [course, setCourse] = useState({
         title: '',
         description: '',
@@ -134,51 +145,51 @@ export default function AddCourse() {
     }
     return (
         <>
-         <div>
-            <Navbar />
-            <div className="h-[90vh] flex justify-between">
             <div>
-                <Sidebar />
-                </div>
-                <div className="overflow-y-scroll flex-grow flex-wrap ">
-                <div className="addCourse">
-                <h1 className="text-4xl font-bold m-4 ">Add Course</h1>
-                <div className="addCourseForm">
-                    <TextField id="outlined-basic" name="title" value={course.title} onChange={handleChange} label='Course Tilte' variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-multiline-static" name="description" value={course.description} onChange={handleChange} label="Short Description" multiline rows={3} sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="price" label='Course Price' value={course.price} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="category" label='Course Categoty' value={course.category} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="tags" value={tag} onChange={addTag} label='Add Tags' variant="outlined" sx={styles} className='inputtext' />
-                    <div className="showTags flex items-center flex-wrap w-[535px] ">
-                        {tags.map((t, index) => (<div key={index} className="oneTag mb-4">#{t}<button name={t} onClick={deleteTag}><i name={t} className="fa-solid fa-xmark flex"></i></button></div>))}
+                <Navbar />
+                <div className="h-[90vh] flex justify-between">
+                    <div>
+                        <Sidebar />
                     </div>
-                    <div className='upload w-[535px]'>
-                        <img src={url}></img>
-                        <Button
-                            component="label"
-                            role={undefined}
-                            variant="contained"
-                            tabIndex={-1}
-                            startIcon={<CloudUploadIcon />}
-                            name="thumbnail"
-                            onChange={handleFileChange}
-                        >
-                            Upload Thumbnail
+                    <div className="overflow-y-scroll flex-grow flex-wrap ">
+                        <div className="addCourse">
+                            <h1 className="text-4xl font-bold m-4 ">Add Course</h1>
+                            <div className="addCourseForm">
+                                <TextField id="outlined-basic" name="title" value={course.title} onChange={handleChange} label='Course Tilte' variant="outlined" sx={styles} className='inputtext' required />
+                                <TextField id="outlined-multiline-static" name="description" value={course.description} onChange={handleChange} label="Short Description" multiline rows={3} sx={styles} className='inputtext' required />
+                                <TextField id="outlined-basic" name="price" label='Course Price' value={course.price} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required />
+                                <TextField id="outlined-basic" name="category" label='Course Categoty' value={course.category} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' required />
+                                <TextField id="outlined-basic" name="tags" value={tag} onChange={addTag} label='Add Tags' variant="outlined" sx={styles} className='inputtext' />
+                                <div className="showTags flex items-center flex-wrap w-[535px] ">
+                                    {tags.map((t, index) => (<div key={index} className="oneTag mb-4">#{t}<button name={t} onClick={deleteTag}><i name={t} className="fa-solid fa-xmark flex"></i></button></div>))}
+                                </div>
+                                <div className='upload w-[535px]'>
+                                    <img src={url}></img>
+                                    <Button
+                                        component="label"
+                                        role={undefined}
+                                        variant="contained"
+                                        tabIndex={-1}
+                                        startIcon={<CloudUploadIcon />}
+                                        name="thumbnail"
+                                        onChange={handleFileChange}
+                                    >
+                                        Upload Thumbnail
 
-                            <VisuallyHiddenInput type="file" />
-                        </Button>
+                                        <VisuallyHiddenInput type="file" />
+                                    </Button>
+                                </div>
+                                <TextField id="outlined-multiline-static" name="benefits" value={course.benefits} onChange={handleChange} label="Benefits" multiline rows={3} sx={styles} className='inputtext' required />
+                                <TextField id="outlined-multiline-static" name="requirements" value={course.requirements} onChange={handleChange} label="Requirements" multiline rows={3} sx={styles} className='inputtext' required />
+                                <Button type='submit' onClick={handleSubmit} disabled={!((url != '') && (tags.length > 0))} variant="contained" size="medium">Next</Button>
+                            </div>
+                        </div>
                     </div>
-                    <TextField id="outlined-multiline-static" name="benefits" value={course.benefits} onChange={handleChange} label="Benefits" multiline rows={3} sx={styles} className='inputtext' required />
-                    <TextField id="outlined-multiline-static" name="requirements" value={course.requirements} onChange={handleChange} label="Requirements" multiline rows={3} sx={styles} className='inputtext' required />
-                    <Button type='submit' onClick={handleSubmit} disabled={!((url != '') && (tags.length > 0))} variant="contained" size="medium">Next</Button>
+
                 </div>
-            </div>          
-                </div>
-              
             </div>
-        </div>
 
-           
+
         </>
     )
 }

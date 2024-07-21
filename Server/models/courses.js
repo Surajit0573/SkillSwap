@@ -49,15 +49,15 @@ const coursesSchema = new mongoose.Schema({
     }
   ],
   teacher: { type: Schema.Types.ObjectId, ref: "User" },
-  teacherName:{type: String, required: true},
-  enrolledUsers:{type:Number,default:0},
-  rating:{type:Number,default:0},
-  language: {type: String,default:"English"},
+  teacherName: { type: String, required: true },
+  enrolledUsers: { type: Number, default: 0 },
+  rating: { type: Number, default: 0 },
+  language: { type: String, default: "English" },
 
-  //   review: [{
-  //     type: Schema.Types.ObjectId,
-  //     ref: 'Review',
-  //   }],
+  reviews: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Review',
+  }],
   //   owner:{
   //     type:Schema.Types.ObjectId,
   //     ref:'User'

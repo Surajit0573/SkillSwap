@@ -1,33 +1,33 @@
 import '../style/Navbar.css';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { ConstructionOutlined } from '@mui/icons-material';
+import { AppContext } from "../AppContext";
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(JSON.parse(localStorage.getItem('isLoggedIn')));
+  const { isLoggedin } = useContext(AppContext);
+  const [isLog, setIsLog] = useState(false);
 
   useEffect(() => {
-    const loggedIn = JSON.parse(localStorage.getItem('isLoggedIn'));
-    if (loggedIn) {
-      setIsLoggedIn(loggedIn);
-    } else {
-      localStorage.setItem('isLoggedIn', JSON.stringify(false));
-      setIsLoggedIn(false);
+    async function fetchData(){
+    const curr = await isLoggedin();
+    console.log(curr);
+    setIsLog(curr);
     }
+    fetchData();
   }, []);
 
   const handleLogout = async () => {
     // Handle user logout
     try {
-      const response = await fetch('http://localhost:3000/api/user/logout',{
+      const response = await fetch('http://localhost:3000/api/user/logout', {
         credentials: "include",
-        withCredentials : true,
+        withCredentials: true,
       });
       if (!response.ok) {
-        throw new Error('Failed to logout');
+        console.error('Failed to logout');
       } else {
-       localStorage.setItem('isLoggedIn', JSON.stringify(false));
-        setIsLoggedIn(false);
+        setIsLog(false);
         window.location.href = '/';
       }
       // localStorage.removeItem('token');
@@ -55,8 +55,8 @@ export default function Navbar() {
       <div className='flex justify-evenly w-fit items-center'>
         <i className="fa-solid fa-heart text-red-600 text-4xl mx-2" id='wishlist'></i>
         <i className="fa-solid fa-cart-shopping  text-3xl mx-2"></i>
-        {(isLoggedIn==true) ?<><button className='bg-black text-white p-2 text-lg rounded-xl mx-2' onClick={handleLogout}>Log Out</button><NavLink to={"/becomeTeach"}><button className='bg-black text-white p-2 text-lg rounded-xl mx-2'>Become a Teacher</button></NavLink></>:<><NavLink to={"/login"}><button className='bg-black text-white p-2 text-lg rounded-xl mx-2'>Login</button></NavLink>
-        <NavLink to={"/signup"}><button className='bg-black text-white p-2 text-lg rounded-xl'>Sign UP</button></NavLink></> }
+        {(isLog == true) ? <><button className='bg-black text-white p-2 text-lg rounded-xl mx-2' onClick={handleLogout}>Log Out</button><NavLink to={"/becomeTeach"}><button className='bg-black text-white p-2 text-lg rounded-xl mx-2'>Become a Teacher</button></NavLink></> : <><NavLink to={"/login"}><button className='bg-black text-white p-2 text-lg rounded-xl mx-2'>Login</button></NavLink>
+          <NavLink to={"/signup"}><button className='bg-black text-white p-2 text-lg rounded-xl'>Sign UP</button></NavLink></>}
 
 
         <NavLink to={"/profile"}><img src='https://shorturl.at/3YD9s' className='h-12 w-12 rounded-full mx-2' ></img></NavLink>

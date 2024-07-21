@@ -9,6 +9,8 @@ const {validateteacher, varifyJWT}=require("../middleware.js");
 const teacherContoller=require("../controller/teacher.js");
 // const { route } = require("./listings.js");
 
+router.get('/',varifyJWT,teacherContoller.isTeacher);
+router.delete('/',varifyJWT,teacherContoller.deleteTeacher);
 //Signup
 router.get("/info",varifyJWT,asyncWrap(teacherContoller.info));
 router.post("/signup",varifyJWT,validateteacher, asyncWrap(teacherContoller.signupForm));

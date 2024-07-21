@@ -16,7 +16,9 @@ export default function Content() {
                 return;
             }else{
                 console.log(result.message);
-                navigate(-1);
+                if(result.redirect){
+                    navigate(result.redirect);
+                }
                 return;
             }
             }catch(err){
@@ -28,7 +30,7 @@ export default function Content() {
     return (
         <>
             <div className="content">
-            {data&&data.map((d)=>(<Card data={d} />))} 
+            {data&&data.map((d,index)=>(<Card key={index} data={d} />))} 
             </div>
         </>
     )

@@ -4,8 +4,9 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
-
+import { useNavigate } from "react-router-dom";
 export default function DashBoard() {
+    const navigate = useNavigate();
     const[pass,setPass]=useState({
         currPass:'',
         newPass:''

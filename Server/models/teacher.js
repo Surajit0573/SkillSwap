@@ -13,7 +13,7 @@ const teacherSchema = new mongoose.Schema({
     rating: { type: Number, required: true,default: 0  },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
+    // reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
     date: { type: Date, default: new Date() },
 });
 

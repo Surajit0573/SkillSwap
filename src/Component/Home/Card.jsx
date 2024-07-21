@@ -17,7 +17,7 @@ export default function Card({data}) {
                 </div>
               <h4 className="text-xl">{data&&data.title}</h4>
               <div className="detail">
-              <h3 className="text-xl mb-2"><Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.5} readOnly /> (4500)</h3>
+              <h3 className="text-xl mb-2 flex items-center">{data&&data.rating} {data&&<Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.1} readOnly />}(4500)</h3>
               <p className='text-xl'>Price: Rs {data&&data.price}</p>
               </div>
               <div className="info">

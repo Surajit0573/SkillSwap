@@ -1,13 +1,24 @@
 import * as React from 'react';
-import { useState,useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import '../style/SignUp.css';
-import { NavLink,useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 export default function Login() {
+  const { isLoggedin } = useContext(AppContext);
   const navigate = useNavigate();
+  useEffect(() => {
+    async function fetchData(){
+      const curr=await isLoggedin();
+    if(curr){
+      alert("You are logged in");
+      navigate('/profile');
+    }
+  }
+  fetchData();
+  }, []);
   const styles =
   {
     '& .MuiOutlinedInput-root': {
@@ -54,15 +65,14 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         credentials: "include",
-        withCredentials : true,
+        withCredentials: true,
         body: JSON.stringify(formData),
       });
       const result = await response.json();
       console.log(result);
-      if(result.ok){
-        localStorage.setItem('isLoggedIn', true);
+      if (result.ok) {
         navigate('/profile');
-      }else if(!result.ok){
+      } else if (!result.ok) {
         alert(result.message);
         return;
       }

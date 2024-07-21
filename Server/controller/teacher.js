@@ -3,6 +3,7 @@ const Teacher = require("../models/teacher.js");
 const User = require("../models/user.js");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Course = require("../models/courses.js");
 const bcryptRound = Number(process.env.BCRYPT_ROUND);
 const jwtSecret = process.env.JWT_SECRET;
 const options = {
@@ -10,6 +11,59 @@ const options = {
     httpOnly: true,
     sameSite: 'None',
     secure: true,
+}
+
+module.exports.isTeacher = async (req, res) => {
+    const { id, type, isComplete } = res.payload;
+    if (type == "instructor") {
+        return res.status(400).json({ ok: true, message: "Welcome back instructor" });
+    }
+    return res.status(400).json({ ok: false, message: "You are not an instructor" });
+}
+
+module.exports.deleteTeacher = async (req, res) => {
+    const { id, type, isComplete } = res.payload;
+    if (type != "instructor") {
+        return res.status(400).json({ ok: false, message: "You are not an instructor" });
+    }
+    try{
+    const user = await User.findById(id).populate('teacher');
+    if (!user) {
+        console.error("User not found");
+        return res.status(404).json({ ok: false, message: "User not found", data: null });
+    }
+    let courses = user.teacher.courses;
+    courses.map(async (c) => {
+        await Course.findByIdAndDelete(c).then((c) => {
+            console.log(`Deleted course: ${c&&c.title}`);
+        }).catch((err) => {
+            console.error(`Error deleting course: ${err}`);
+        });
+    });
+    await Teacher.findByIdAndDelete(user.teacher._id).then((t) => {
+        console.log(`Teacher Deleted`);
+    }).catch((err) => {
+        console.error(`Error deleting Teacher: ${err}`);
+    });
+    user.teacher = null;
+    user.type='learner';
+    await user.save();
+    const payload = {
+        id: user._id,
+        email: user.email,
+        type: user.type,
+        isComplete: user.isComplete,
+    }
+    const token = jwt.sign(payload, jwtSecret, {
+        expiresIn: '24h'
+    });
+    res.clearCookie("token", options);
+    res.cookie("token", token, options);
+    return res.status(400).json({ ok: true, message: "You have been removed as a Instructor" });
+}catch(e){
+    console.error(e);
+    return res.status(500).json({ ok: false, message: "Server error" });
+}
 }
 
 module.exports.info = async (req, res) => {
@@ -90,7 +144,7 @@ module.exports.myCourses = async (req, res) => {
             console.error("User not found");
             return res.status(404).json({ ok: false, message: "User not found", redirect: '/login', data: null });
         }
-        const teacher=await Teacher.findById(user.teacher).populate('courses');
+        const teacher = await Teacher.findById(user.teacher).populate('courses');
         if (!teacher) {
             return res.status(400).json({ ok: false, message: "You are not an instructor", redirect: '/becomeTeach', data: null });
         }

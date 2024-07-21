@@ -42,7 +42,7 @@ export default function Details() {
             <Lessons data={data&&data.sections}/>
             <About data={data}/>
             <Teacher data={data&&data.teacher}/>
-            <Reviews />
+            <Reviews data={data}/>
             <Related />
         </>
     )

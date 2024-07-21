@@ -3,6 +3,32 @@ import axios from 'axios';
 export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
+    async function isLoggedin() {
+        const response = await fetch('http://localhost:3000/api/user/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: "include",
+            withCredentials: true,
+        });
+        const result = await response.json();
+        return result.ok;
+    }
+
+    async function isTeacher() {
+        const response = await fetch('http://localhost:3000/api/user/teacher', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: "include",
+            withCredentials: true,
+        });
+        const result = await response.json();
+        return result.ok;
+    }
+
 
     function getFileType(mimeType) {
         if (typeof mimeType !== 'string') {
@@ -40,13 +66,13 @@ export default function AppContextProvider({ children }) {
         if (url != '') {
             // Extract the necessary part from the URL
             const urlSegments = url.split('/');
-            const lastTwoSegments = urlSegments.slice(-2).join('/').split('.')[0]; 
+            const lastTwoSegments = urlSegments.slice(-2).join('/').split('.')[0];
             const type = lastTwoSegments.split('/')[0]; // "skillshare"
             const publicId = lastTwoSegments.split('/')[1]; // "hlsuokgvbogo3mp3o1ep"
-            console.log("Details: ",url,urlSegments,lastTwoSegments,publicId,type);
+            console.log("Details: ", url, urlSegments, lastTwoSegments, publicId, type);
             try {
                 // Send the POST request with the file
-                const response = await axios.post('http://localhost:3000/api/upload/delete', { publicId,type });
+                const response = await axios.post('http://localhost:3000/api/upload/delete', { publicId, type });
                 console.log(response);
 
             } catch (error) {
@@ -55,7 +81,7 @@ export default function AppContextProvider({ children }) {
         }
     }
 
-    const value = { getUrl, deleteFile };
+    const value = { getUrl, deleteFile, isLoggedin,isTeacher };
     return (
         <AppContext.Provider value={value}>
             {children}

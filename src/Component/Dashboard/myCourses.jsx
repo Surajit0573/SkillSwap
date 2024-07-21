@@ -2,8 +2,9 @@ import Navbar from "../Navbar";
 import Sidebar from "./sidebar";
 import {useState,useEffect} from 'react';
 import Card from "../Home/Card";
-import { NavLink } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
 export default function MyCourses() {
+    const navigate = useNavigate();
     const [data, setData] = useState(null);
     useEffect(() => {
         async function fetchData() {

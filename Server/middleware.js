@@ -4,7 +4,6 @@ if(process.env.NODE_ENV!="production"){
 const jwt = require('jsonwebtoken');
 const ExpressError = require("./utils/ExpressError.js");
 const { courseSchema, reviewSchema,userSchema,teacherSchema,profileSchema } = require("./schemaValidation.js");
-const { redirect } = require('react-router-dom');
 const jwtSecret=process.env.JWT_SECRET;
 
 

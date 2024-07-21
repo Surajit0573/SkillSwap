@@ -12,6 +12,7 @@ const users = require("./routes/user.js");
 const teacher = require("./routes/teacher.js");
 const profile = require("./routes/profile.js");
 const upload = require("./routes/upload.js");
+const review=require("./routes/reviews.js");
 const app = express();
 app.use(cors({
   credentials: true,
@@ -65,6 +66,7 @@ app.use("/api/upload",upload);
 app.use("/api/user/teacher",teacher);
 app.use("/api/user/profile",profile);
 app.use("/api/user",users);
+app.use("/api/review",review);
 // app.use("/listings", listings);
 // app.use("/listings/:id/reviews", reviews);
 // app.use("/",users);

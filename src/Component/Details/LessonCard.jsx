@@ -30,9 +30,9 @@ export default function LessonCard({name,data,num}) {
           <ListItemButton sx={{ pl: 4 }}>
           <div className='flex flex-col w-full'>
           {data.map((d,index)=>(
-            <div className='flex my-2 justify-between'>
+            <div key={index} className='flex my-2 justify-between'>
             <p>{d.url.indexOf("video") > -1 ? <i className="fa-solid fa-video"></i> : <i className="fa-solid fa-file-lines"></i>}<span className='mx-4'>{d.name}</span></p>
-            <p><i class="fa-solid fa-lock mx-4"></i> 5:23 min</p>
+            <p><i className="fa-solid fa-lock mx-4"></i> 5:23 min</p>
             </div>
           ))}
           </div>

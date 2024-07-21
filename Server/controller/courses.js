@@ -71,7 +71,7 @@ module.exports.addLessons = async (req, res) => {
 module.exports.show = async (req, res) => {
     const {id}=req.params;
     try{
-        let course = await Course.findById(id);
+        let course = await Course.findById(id).populate('reviews');
         if (!course) {
             console.error("No courses found");
             return res.status(404).json({ ok: false, message: "No courses found", redirect: '/', data: null });
