@@ -1,7 +1,7 @@
 const User = require("../models/user.js");
 const Teacher = require('../models/teacher.js');
 const Course = require('../models/courses.js');
-const Profile= require('../models/profile.js');
+const Profile = require('../models/profile.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bcryptRound = Number(process.env.BCRYPT_ROUND);
@@ -12,6 +12,64 @@ const options = {
     sameSite: 'None',
     secure: true,
 }
+
+
+module.exports.deleteFromCart = async (req, res) => {
+    const { id } = res.payload;
+    const { course_id } = req.body;
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        user.cart = user.cart.filter((c) => c.toString()!== course_id.toString());
+        await user.save();
+        return res.status(200).json({ ok: true, message: "Course deleted from cart successfully", });
+
+    } catch (e) {
+        return res.status(500).json({ ok: false, message: "Server error" });
+    }
+}
+
+module.exports.getFromCart = async (req, res) => {
+    const { id } = res.payload;
+    try {
+        const user = await User.findById(id).populate('cart');
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        return res.status(200).json({ ok: true, message: "Fetched cart data successfully", data: user.cart });
+
+    } catch (e) {
+        return res.status(500).json({ ok: false, message: "Server error" });
+    }
+}
+
+
+module.exports.addToCart = async (req, res) => {
+    const { id } = res.payload;
+    const { course_id } = req.body;
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        if (user.cart.includes(course_id)) {
+            console.error("Course already exists in cart");
+            return res.status(400).json({ ok: false, message: "Course already exists in cart", data: null });
+        }
+        user.cart = [...user.cart, course_id];
+        user.save();
+        return res.status(200).json({ ok: true, message: "Course Added to Cart successfully", data: user.cart });
+
+    } catch (e) {
+        return res.status(500).json({ ok: false, message: "Server error" });
+    }
+}
+
 
 module.exports.deleteAccount = async (req, res) => {
     const { id, type, isComplete } = res.payload;
@@ -45,7 +103,7 @@ module.exports.deleteAccount = async (req, res) => {
                 console.error(`Error deleting Profile: ${err}`);
             });
             user.isComplete = false;
-            user.profile=null;
+            user.profile = null;
         }
         await user.save();
         await User.findByIdAndDelete(id);

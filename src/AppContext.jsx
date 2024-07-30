@@ -81,7 +81,47 @@ export default function AppContextProvider({ children }) {
         }
     }
 
-    const value = { getUrl, deleteFile, isLoggedin,isTeacher };
+    async function getCart(){
+        try {
+            const response = await fetch(`http://localhost:3000/api/user/cart`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                withCredentials: true,
+            });
+            const result = await response.json();
+            console.log(result);
+            return result;
+        } catch (error) {
+            console.error('Error:', error);
+            return null;
+        }
+    }
+
+    async function deleteCart(data){
+        try {
+            const response = await fetch(`http://localhost:3000/api/user/cart`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                withCredentials: true,
+                body: JSON.stringify({ course_id: data._id }),
+            });
+            const result = await response.json();
+           return result;
+           
+        } catch (error) {
+            console.error('Error:', error);
+            return null;
+        }
+    }
+
+
+    const value = { getUrl, deleteFile, isLoggedin,isTeacher,getCart,deleteCart };
     return (
         <AppContext.Provider value={value}>
             {children}

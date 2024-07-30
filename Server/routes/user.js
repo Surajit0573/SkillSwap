@@ -12,6 +12,11 @@ router.post("/login",asyncWrap(userContoller.login));
 router.get("/logout", varifyJWT,userContoller.logout);
 router.route("/changePass")
 .get(varifyJWT,asyncWrap(userContoller.changePass))
-.post(varifyJWT,asyncWrap(userContoller.updatePass))
+.post(varifyJWT,asyncWrap(userContoller.updatePass));
+
+router.route("/cart")
+.post(varifyJWT,asyncWrap(userContoller.addToCart))
+.get(varifyJWT,asyncWrap(userContoller.getFromCart))
+.delete(varifyJWT,asyncWrap(userContoller.deleteFromCart));
 
 module.exports = router;

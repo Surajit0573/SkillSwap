@@ -12,6 +12,7 @@ import DashBoard from './Component/dashboard.jsx';
 import Certificate from './Component/Dashboard/certificate.jsx';
 import UpdateAccount from './Component/Dashboard/updateAccount.jsx';
 import MyCourses from './Component/Dashboard/myCourses.jsx';
+import Cart from './Component/Cart.jsx';
 function App() {
 
   return (
@@ -19,6 +20,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/details" element={<Details/>} />
+      <Route path='/cart' element={<Cart/>} />
       <Route path="/signup" element={<SignUp/>} />
       <Route path="/login" element={<Login/>} />
       <Route path="/profile" element={<Profile/>} />

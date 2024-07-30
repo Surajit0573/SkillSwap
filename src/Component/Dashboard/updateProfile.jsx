@@ -6,7 +6,6 @@ import { styled } from '@mui/material/styles';
 import '../../style/AddCourse.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from 'axios';
 import { AppContext } from "../../AppContext";
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',

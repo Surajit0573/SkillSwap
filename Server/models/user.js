@@ -32,7 +32,21 @@ const User = new Schema({
     teacher:{
         type:Schema.Types.ObjectId,
         ref:'Teacher'
-    }
+    },
+    cart:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Course'
+    }],
+    wishlist:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Course'
+    }],
+    buyCourses:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Course'
+    }],
+    billingDetails:[{}]
+
     
 });
 

@@ -4,15 +4,17 @@ import { NavLink } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { ConstructionOutlined } from '@mui/icons-material';
 import { AppContext } from "../AppContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Navbar() {
   const { isLoggedin } = useContext(AppContext);
   const [isLog, setIsLog] = useState(false);
 
   useEffect(() => {
-    async function fetchData(){
-    const curr = await isLoggedin();
-    console.log(curr);
-    setIsLog(curr);
+    async function fetchData() {
+      const curr = await isLoggedin();
+      console.log(curr);
+      setIsLog(curr);
     }
     fetchData();
   }, []);
@@ -43,7 +45,8 @@ export default function Navbar() {
 
 
 
-  return (
+  return (<>
+    <ToastContainer />
     <div className='Navbar flex justify-between'>
       <div className='flex justify-evenly w-fit items-center'>
         <NavLink to={"/"}> <div className='flex items-center mx-4'>
@@ -54,7 +57,7 @@ export default function Navbar() {
       </div>
       <div className='flex justify-evenly w-fit items-center'>
         <i className="fa-solid fa-heart text-red-600 text-4xl mx-2" id='wishlist'></i>
-        <i className="fa-solid fa-cart-shopping  text-3xl mx-2"></i>
+        <NavLink to={'/cart'}><i className="fa-solid fa-cart-shopping  text-3xl mx-2"></i></NavLink>
         {(isLog == true) ? <><button className='bg-black text-white p-2 text-lg rounded-xl mx-2' onClick={handleLogout}>Log Out</button><NavLink to={"/becomeTeach"}><button className='bg-black text-white p-2 text-lg rounded-xl mx-2'>Become a Teacher</button></NavLink></> : <><NavLink to={"/login"}><button className='bg-black text-white p-2 text-lg rounded-xl mx-2'>Login</button></NavLink>
           <NavLink to={"/signup"}><button className='bg-black text-white p-2 text-lg rounded-xl'>Sign UP</button></NavLink></>}
 
@@ -64,5 +67,6 @@ export default function Navbar() {
 
 
     </div>
+  </>
   );
 }
