@@ -19,4 +19,6 @@ router.route("/cart")
 .get(varifyJWT,asyncWrap(userContoller.getFromCart))
 .delete(varifyJWT,asyncWrap(userContoller.deleteFromCart));
 
+router.route("/payment")
+.post(varifyJWT,asyncWrap(userContoller.payment));
 module.exports = router;

@@ -12,7 +12,70 @@ const options = {
     sameSite: 'None',
     secure: true,
 }
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { v4: uuidv4 } = require('uuid');
 
+module.exports.payment = async (req, res) => {
+    const { id } = res.payload;
+    const { products, token } = req.body;
+    const amount = products.reduce((total, product) => total + product.price, 0) * 90; // Amount in paise (cents for INR)
+    console.log("Products: ", products);
+    const idempotencyKey = uuidv4();
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+
+
+        const customer = await stripe.customers.create({
+            email: user.email,
+        });
+
+        // Create a customer if needed, or retrieve existing customer ID
+        // if (!user.stripeCustomerId) {
+        //     customer = await stripe.customers.create({
+        //         email: user.email,
+        //     });
+        //     user.stripeCustomerId = customer.id;
+        //     await user.save();
+        // } else {
+        //     customer = await stripe.customers.retrieve(user.stripeCustomerId);
+        // }
+
+        // Create a Payment Intent
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount,
+            currency: 'INR',
+            customer: customer.id,
+            receipt_email: user.email,
+            payment_method_data: {
+                type: 'card',
+                card: {
+                    token: token.id
+                }
+            },
+            automatic_payment_methods: {
+                enabled: true,
+                allow_redirects: 'never'
+            },
+            confirm: true, // Automatically confirm the payment intent
+        }, { idempotencyKey });
+
+       //extract all the product _id from products and add them to the user's buyCourses
+        const buyCourses = products.map((product) => product._id);
+        user.buyCourses = [...user.buyCourses,...buyCourses];
+        await user.save();
+        
+        return res.status(200).json({ ok: true, message: "Payment successful", data: paymentIntent });
+
+    } catch (e) {
+        console.error(e.message);
+        return res.status(500).json({ ok: false, message: "Something went wrong" });
+    }
+}
 
 module.exports.deleteFromCart = async (req, res) => {
     const { id } = res.payload;
@@ -23,7 +86,7 @@ module.exports.deleteFromCart = async (req, res) => {
             console.error("User not found");
             return res.status(404).json({ ok: false, message: "User not found", data: null });
         }
-        user.cart = user.cart.filter((c) => c.toString()!== course_id.toString());
+        user.cart = user.cart.filter((c) => c.toString() !== course_id.toString());
         await user.save();
         return res.status(200).json({ ok: true, message: "Course deleted from cart successfully", });
 

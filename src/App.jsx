@@ -12,6 +12,7 @@ import DashBoard from './Component/dashboard.jsx';
 import Certificate from './Component/Dashboard/certificate.jsx';
 import UpdateAccount from './Component/Dashboard/updateAccount.jsx';
 import MyCourses from './Component/Dashboard/myCourses.jsx';
+import BoughtCourses from './Component/Dashboard/boughtCourses.jsx';
 import Cart from './Component/Cart.jsx';
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
       <Route path="/dashboard/certificate" element={<Certificate />} />
       <Route path="/dashboard/account" element={<UpdateAccount />} />
       <Route path="/dashboard/myCourses" element={<MyCourses />} />
+      <Route path="/dashboard/boughtCourses" element={<BoughtCourses />} />
       <Route path="*" element={<h1>Page Not Found</h1>} />
     </Routes>
     </>

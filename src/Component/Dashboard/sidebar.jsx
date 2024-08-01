@@ -53,7 +53,7 @@ export default function Sidebar() {
       <div className="flex flex-col">
         <NavLink to={'/dashboard/'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Update Basic Details</div></NavLink>
         {!isTeach && <NavLink to={'/dashboard/certificate'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Certificates</div></NavLink>}
-        {!isTeach && <NavLink><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">My Courses</div></NavLink>}
+        {!isTeach && <NavLink to={'/dashboard/boughtCourses'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">My Courses</div></NavLink>}
         {isTeach && <NavLink to={'/dashboard/myCourses'}> <div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">My Courses</div></NavLink>}
         {isTeach && <NavLink> <div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Performance</div></NavLink>}
       </div>
