@@ -17,6 +17,12 @@ const User = new Schema({
         type:String,
         required:true
     },
+    verify:{
+        type:Boolean,
+        default:false
+    },
+    otp:{type:String},
+    otpExpiry: { type: Date},
     type:{
         type:String,
         default:"learner"

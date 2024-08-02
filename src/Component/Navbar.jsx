@@ -1,12 +1,14 @@
 import '../style/Navbar.css';
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate,useLocation } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { ConstructionOutlined } from '@mui/icons-material';
 import { AppContext } from "../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export default function Navbar() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isLoggedin } = useContext(AppContext);
   const [isLog, setIsLog] = useState(false);
 
@@ -17,7 +19,7 @@ export default function Navbar() {
       setIsLog(curr);
     }
     fetchData();
-  }, []);
+  }, [location]);
 
   const handleLogout = async () => {
     // Handle user logout
@@ -28,9 +30,11 @@ export default function Navbar() {
       });
       if (!response.ok) {
         console.error('Failed to logout');
+        toast.error('Failed to logout');
       } else {
-        setIsLog(false);
-        window.location.href = '/';
+      setIsLog(false);
+      toast.success('Logged out');
+       navigate('/')
       }
       // localStorage.removeItem('token');
 
@@ -38,6 +42,7 @@ export default function Navbar() {
 
     } catch (e) {
       console.error('Failed to logout:', e);
+      toast.error('Failed to logout');
     }
   };
 

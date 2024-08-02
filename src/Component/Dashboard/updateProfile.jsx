@@ -7,6 +7,8 @@ import '../../style/AddCourse.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../AppContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -60,6 +62,10 @@ export default function UpdateProfile() {
                 setHeading("Update Your Profile");
             } else {
                 console.log(result.message);
+                toast.error(result.message);
+                if(result.redirect){
+                    navigate(result.redirect);
+                }
             }
         }
         fetchData();
@@ -150,12 +156,18 @@ export default function UpdateProfile() {
             const result = await response.json();
             console.log(result);
             if (result.ok) {
+                console.log(result.message);
                 navigate('/profile');
             } else {
-                alert("Something went wrong. Please try again !!");
+                console.log(result.message);
+                toast.error(result.message);
+                if(result.redirect){
+                    navigate(result.redirect);
+                }
             }
         } catch (error) {
             console.error('Error uploading file:', error);
+            toast.error('Failed to update profile, try again later.');
         }
     }
     return (

@@ -10,6 +10,7 @@ export default function Card({ data }) {
     const navigate = useNavigate()
     function clickHandeler() {
         navigate("/details", { state: { id: data._id } });
+        return;
     }
 
     async function handleDelete() {
@@ -21,6 +22,9 @@ export default function Card({ data }) {
                     return navigate('/cart');
                 } else if (!result.ok) {
                     toast.error(result.message);
+                    if (result.redirect) {
+                        navigate(result.redirect);
+                    }
                     return;
                 }
             } catch (error) {

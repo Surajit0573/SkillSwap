@@ -22,6 +22,10 @@ export default function CourseDetails({ data }) {
                     return;
                 } else if (!result.ok) {
                     toast.error(result.message);
+                    if(result.redirect) {
+                        navigate(result.redirect);
+                        return;
+                    }
                     return;
                 }
             } catch (error) {
@@ -53,6 +57,10 @@ export default function CourseDetails({ data }) {
                 return;
             } else if (!result.ok) {
                 toast.error(result.message);
+                if(result.redirect){
+                    navigate(result.redirect);
+                    return;
+                }
                 return;
             }
         } catch (error) {
@@ -71,6 +79,9 @@ export default function CourseDetails({ data }) {
                     return;
                 } else if (!result.ok) {
                     toast.error(result.message);
+                    if(result.redirect){
+                        navigate(result.redirect);
+                    }
                     return;
                 }
             } catch (error) {

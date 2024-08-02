@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function DashBoard() {
     const navigate = useNavigate();
     const[pass,setPass]=useState({
@@ -33,8 +35,10 @@ export default function DashBoard() {
                         navigate(result.redirect);
                     }
                 }
+                return;
             } catch (error) {
                 console.error('Error:', error);
+                return;
             }
         }
 
@@ -89,10 +93,14 @@ export default function DashBoard() {
             const result = await response.json();
             console.log(result.message);
             if (result.ok) {
-                alert('Password changed successfully');
+                toast.success('Password changed successfully');
+                return;
             } else {
-                alert(result.message);
+                toast.error(result.message);
                 console.error(result.message);
+                if(result.redirect){
+                    navigate(result.redirect);
+                }
             }
         } catch (error) {
             console.error('Error:', error);

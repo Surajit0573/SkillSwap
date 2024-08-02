@@ -4,6 +4,8 @@ import UpdateProfile from './Dashboard/updateProfile.jsx';
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../AppContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function DashBoard() {
     const navigate = useNavigate();
     const { isLoggedin } = useContext(AppContext);
@@ -11,7 +13,7 @@ export default function DashBoard() {
         async function fetchData() {
             const curr = await isLoggedin();
             if (!curr) {
-                alert("You are not logged in");
+                toast.error(`You must be logged in`);
                 navigate('/login');
             }
         }

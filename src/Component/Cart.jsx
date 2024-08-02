@@ -3,10 +3,11 @@ import Navbar from './Navbar';
 import CartCard from './Cart/cartCard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import { AppContext } from '../AppContext';
 import StripeCheckout from 'react-stripe-checkout';
 export default function Cart() {
+    const navigate = useNavigate();
     const { getCart } = useContext(AppContext);
     const location = useLocation();
     const [data, setData] = useState(null);
@@ -49,6 +50,9 @@ export default function Cart() {
                 toast.success(result.message);
             } else {
                 toast.error(result.message);
+                if(result.redirect) {
+                    navigate(result.redirect);
+                }
             }
         }).catch(error => {
             console.error('Error:', error);

@@ -9,7 +9,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddLessonCard from './AddLessonCard';
 import { useNavigate,useLocation } from "react-router-dom";
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -28,6 +29,7 @@ export default function AddLesson() {
     useEffect(() => {
         const { state } = location;
         if(!(state&&state.id)){
+            toast.error("you have to create a course first");
             navigate('/addCourse');
             return;
         }
@@ -91,7 +93,7 @@ export default function AddLesson() {
             });
             const result = await response.json();
             if(!result.ok){
-                alert(result.message);
+               toast.error(result.message);
                 if(result.redirect){
                     navigate(result.redirect);
                     return;
@@ -101,12 +103,14 @@ export default function AddLesson() {
                 }
             }
             console.log(result.message);
+            toast.success(result.message);
             navigate('/profile');
             return;
             
 
         } catch (error) {
             console.error('Error uploading file:', error);
+            toast.error('something went wrong uploading file');
         }
     }
     return (

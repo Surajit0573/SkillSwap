@@ -1,7 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../AppContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Sidebar() {
+  const navigate = useNavigate();
   const { isTeacher } = useContext(AppContext);
   const [isTeach, setIsTeach] = useState(false);
 
@@ -10,41 +13,56 @@ export default function Sidebar() {
       const curr = await isTeacher();
       console.log(curr);
       setIsTeach(curr);
+      return;
     }
     fetchData();
   }, []);
 
   async function deleteTeach() {
-    const response = await fetch('http://localhost:3000/api/user/teacher/', {
-      method: 'DELETE',
-      credentials: "include",
-      withCredentials: true,
-    });
-    const result = await response.json();
-    console.log(result);
-    if (result.ok) {
-      setIsTeach(false);
-      alert('You have been removed as a teacher');
-      window.location.href = "/";
-    } else {
-      alert(result.message);
+    if (window.confirm('Are you sure you want to delete your teacher account ?')) {
+      const response = await fetch('http://localhost:3000/api/user/teacher/', {
+        method: 'DELETE',
+        credentials: "include",
+        withCredentials: true,
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.ok) {
+        setIsTeach(false);
+        toast.success("You are removed as a teacher");
+        navigate('/');
+        return;
+      } else {
+        toast.error(result.message);
+        if(result.redirect){
+          navigate(result.redirect);
+        }
+        return;
+      }
     }
   }
 
   async function deleteAccount() {
-    const response = await fetch('http://localhost:3000/api/user/', {
-      method: 'DELETE',
-      credentials: "include",
-      withCredentials: true,
-    });
-    const result = await response.json();
-    console.log(result);
-    if (result.ok) {
-      setIsTeach(false);
-      alert('Your account have been removed');
-      window.location.href = "/";
-    } else {
-      alert(result.message);
+    if (window.confirm('Are you sure you want to delete your account ?')) {
+      const response = await fetch('http://localhost:3000/api/user/', {
+        method: 'DELETE',
+        credentials: "include",
+        withCredentials: true,
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.ok) {
+        setIsTeach(false);
+        toast.success("Your account has been deleted");
+        navigate('/');
+        return;
+      } else {
+        toast.error(result.message);
+        if(result.redirect){
+          navigate(result.redirect);
+        }
+        return;
+      }
     }
   }
 

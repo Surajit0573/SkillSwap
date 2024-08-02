@@ -6,6 +6,8 @@ import '../style/SignUp.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function SignUp() {
   const { isLoggedin } = useContext(AppContext);
   const navigate = useNavigate();
@@ -13,8 +15,9 @@ export default function SignUp() {
     async function fetchData() {
       const curr = await isLoggedin();
       if (curr) {
-        alert("You are logged in");
+        toast.warn("Your already logged in");
         navigate('/profile');
+        return;
       }
     }
     fetchData();
@@ -73,14 +76,18 @@ export default function SignUp() {
       const result = await response.json();
       console.log(result);
       if (!result.ok) {
-        alert(result.message);
+        toast.error(result.message);
+        console.error(result.message);
         return;
       } else if (result.ok) {
-
-        navigate('/profile');
+        toast.success(result.message);
+        navigate('/verifyEmail');
+        return;
       }
     } catch (error) {
+      toast.error('Something went wrong');
       console.error('Error:', error);
+      return;
 
     }
   };

@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import '../style/SignUp.css';
 import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function BecomeTeach() {
   const [name, setName] = useState('');
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ export default function BecomeTeach() {
         const result = await response.json();
         console.log(result);
         if (!result.ok) {
+          toast.error(result.message);
           if (result.redirect) {
             console.log(result.message);
             navigate(result.redirect);
@@ -95,20 +98,22 @@ export default function BecomeTeach() {
       });
       const result = await response.json();
       if (!result.ok) {
+        toast.error(result.message);
         if (result.redirect) {
           console.log(result.message);
           navigate(result.redirect);
           return;
         } else {
-          alert(result.message);
           navigate(-1);
           return;
         }
       }else{
+        toast.success(result.message);
         console.log(result.message);
         navigate('/profile');
       }
     } catch (error) {
+      toast.success('something went wrong');
       console.error('Error:', error);
     }
   };

@@ -29,6 +29,19 @@ export default function AppContextProvider({ children }) {
         return result.ok;
     }
 
+    async function getEmail() {
+        const response = await fetch('http://localhost:3000/api/user/getEmail', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: "include",
+            withCredentials: true,
+        });
+        const result = await response.json();
+        return result;
+    }
+
 
     function getFileType(mimeType) {
         if (typeof mimeType !== 'string') {
@@ -121,7 +134,7 @@ export default function AppContextProvider({ children }) {
     }
 
 
-    const value = { getUrl, deleteFile, isLoggedin,isTeacher,getCart,deleteCart };
+    const value = { getUrl, deleteFile, isLoggedin,isTeacher,getCart,deleteCart,getEmail };
     return (
         <AppContext.Provider value={value}>
             {children}

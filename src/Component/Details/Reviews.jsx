@@ -2,7 +2,11 @@ import Review from './Review';
 import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import { useState,useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 export default function Reviews({ data }) {
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -29,13 +33,18 @@ export default function Reviews({ data }) {
         setReviews(result.data);
         setReview('');
         setValue(0);
+        toast.success('Review submitted successfully');
         window.location.href = '/details';
       } else if (!result.ok) {
-        alert(result.message);
+        toast.error(result.message);
+        if(result.redirect){
+          navigate(result.redirect);
+        }
         return;
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Something went wrong');
     }
     console.log('Review submitted with rating:', value);
   }

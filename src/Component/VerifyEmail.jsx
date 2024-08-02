@@ -3,24 +3,45 @@ import { useState, useContext, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import '../style/SignUp.css';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export default function Login() {
-  const { isLoggedin } = useContext(AppContext);
+  const location = useLocation();
+  const { getEmail } = useContext(AppContext);
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
   const navigate = useNavigate();
+
   useEffect(() => {
-    async function fetchData(){
-      const curr=await isLoggedin();
-    if(curr){
-      toast.warn("you are already logged in")
-      navigate('/profile');
+    async function fetchData() {
+      const result = await getEmail();
+      console.log("USEEFFECT IN VERIFYEMAIL  ", result);
+      if (result.ok) {
+        toast.success(result.message);
+        setEmail(result.data);
+        return;
+      } else {
+        toast.error(result.message);
+        if (result.redirect) {
+          navigate(result.redirect);
+        } else {
+          navigate('/signup');
+        }
+        return;
+      }
     }
-  }
-  fetchData();
-  }, []);
+    try {
+      fetchData();
+    } catch (e) {
+      console.error('Error:', e);
+      toast.error("Something went wrong");
+      return;
+    }
+  }, [location]);
+
   const styles =
   {
     '& .MuiOutlinedInput-root': {
@@ -45,30 +66,17 @@ export default function Login() {
     },
   }
 
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/user/login', {
+      const response = await fetch('http://localhost:3000/api/user/verifyEmail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: "include",
         withCredentials: true,
-        body: JSON.stringify(formData),
+        body: JSON.stringify({otp}),
       });
       const result = await response.json();
       console.log(result);
@@ -79,10 +87,13 @@ export default function Login() {
         toast.error(result.message);
         if(result.redirect){
           navigate(result.redirect);
+          return;
         }
+        return;
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Something went wrong');
     }
   };
 
@@ -92,14 +103,21 @@ export default function Login() {
     <>
       <Navbar />
       <div className="signup">
-        <img src="https://st.depositphotos.com/18722762/51522/v/450/depositphotos_515228796-stock-illustration-online-registration-sign-login-account.jpg"></img>
         <form onSubmit={handleSubmit}>
           <div className="signup-form">
-            <h1>Login and start learning</h1>
-            <TextField id="outlined-basic" label="Full Name" name='username' value={formData.username} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
-            <TextField id="outlined-basic" label="Password" name='password' value={formData.password} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
-            <Button type='submit' variant="contained" size="medium">Log In</Button>
-            <p>Doesn't have an account? <NavLink to='/signup'>Sign Up</NavLink></p>
+            <h1>Verify your email</h1>
+            {(email.length > 0) && <TextField
+              id="outlined-read-only-input"
+              label="Registered Email"
+              defaultValue={email}
+              sx={styles}
+              InputProps={{
+                readOnly: true,
+              }}
+            />}
+            <br />
+            <TextField id="outlined-basic" label="OTP" name='OTP' value={otp} onChange={(e) => setOtp(e.target.value)} variant="outlined" sx={styles} className='inputtext' />
+            <Button type='submit' variant="contained" size="medium">Varify</Button>
           </div>
         </form>
       </div>

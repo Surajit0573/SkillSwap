@@ -4,16 +4,50 @@ const Course = require('../models/courses.js');
 const Profile = require('../models/profile.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { v4: uuidv4 } = require('uuid');
+const nodemailer = require('nodemailer');
+
 const bcryptRound = Number(process.env.BCRYPT_ROUND);
 const jwtSecret = process.env.JWT_SECRET;
+
 const options = {
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     httpOnly: true,
     sameSite: 'None',
     secure: true,
 }
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { v4: uuidv4 } = require('uuid');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Use your email service provider
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+    }
+});
+
+const sendOTPEmail = (email, otp) => {
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Your OTP Code',
+        text: `Your OTP code is ${otp}`
+    };
+    return transporter.sendMail(mailOptions);
+};
+
+const sendReceiptEmail = (customerEmail, receiptContent) => {
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: customerEmail,
+        subject: 'Your Purchase Receipt',
+        html: receiptContent
+    };
+    return transporter.sendMail(mailOptions);
+};
 
 module.exports.payment = async (req, res) => {
     const { id } = res.payload;
@@ -29,23 +63,10 @@ module.exports.payment = async (req, res) => {
             return res.status(404).json({ ok: false, message: "User not found", data: null });
         }
 
-
         const customer = await stripe.customers.create({
             email: user.email,
         });
 
-        // Create a customer if needed, or retrieve existing customer ID
-        // if (!user.stripeCustomerId) {
-        //     customer = await stripe.customers.create({
-        //         email: user.email,
-        //     });
-        //     user.stripeCustomerId = customer.id;
-        //     await user.save();
-        // } else {
-        //     customer = await stripe.customers.retrieve(user.stripeCustomerId);
-        // }
-
-        // Create a Payment Intent
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount,
             currency: 'INR',
@@ -64,13 +85,46 @@ module.exports.payment = async (req, res) => {
             confirm: true, // Automatically confirm the payment intent
         }, { idempotencyKey });
 
-       //extract all the product _id from products and add them to the user's buyCourses
+        // Extract all the product _id from products and add them to the user's buyCourses
         const buyCourses = products.map((product) => product._id);
-        user.buyCourses = [...user.buyCourses,...buyCourses];
+        user.buyCourses = [...user.buyCourses, ...buyCourses];
+        user.cart = [];
         await user.save();
-        
-        return res.status(200).json({ ok: true, message: "Payment successful", data: paymentIntent });
 
+        // Generate receipt content
+        const receiptContent = `
+            <h1>Receipt</h1>
+            <p>Thank you for your purchase!</p>
+            <p><strong>Total Amount:</strong> ₹${amount / 100}</p>
+            <p><strong>Products:</strong></p>
+            <ul>
+                ${products.map(product => `<li>${product.title} - ₹${product.price}</li>`).join('')}
+            </ul>
+            <p><strong>Customer Email:</strong> ${user.email}</p>
+        `;
+
+        // Send receipt to the customer and yourself
+        await sendReceiptEmail(user.email, receiptContent);
+        await sendReceiptEmail(process.env.EMAIL, receiptContent);
+
+        return res.status(200).json({ ok: true, message: "Payment successful and receipt sent", data: paymentIntent });
+
+    } catch (e) {
+        console.error(e.message);
+        return res.status(500).json({ ok: false, message: "Something went wrong" });
+    }
+};
+
+
+module.exports.getCourses = async (req, res) => {
+    const { id } = res.payload;
+    try {
+        const user = await User.findById(id).populate('buyCourses');
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        return res.status(200).json({ ok: true, message: "Fetched course data successfully", data: user.buyCourses });
     } catch (e) {
         console.error(e.message);
         return res.status(500).json({ ok: false, message: "Something went wrong" });
@@ -125,7 +179,7 @@ module.exports.addToCart = async (req, res) => {
             return res.status(400).json({ ok: false, message: "Course already exists in cart", data: null });
         }
         user.cart = [...user.cart, course_id];
-        user.save();
+        await user.save();
         return res.status(200).json({ ok: true, message: "Course Added to Cart successfully", data: user.cart });
 
     } catch (e) {
@@ -185,7 +239,7 @@ module.exports.isLoggedin = async (req, res) => {
         console.error("User not logged in");
         return res.status(401).json({ ok: false, message: "User not logged in" });
     }
-    const user = User.findById(id);
+    const user = await User.findById(id);
     if (!user) {
         console.error("User not found");
         return res.status(404).json({ ok: false, message: "User not found" });
@@ -193,29 +247,78 @@ module.exports.isLoggedin = async (req, res) => {
     return res.json({ ok: true, message: "User is Logged In" });
 }
 
+module.exports.getEmail = async (req, res) => {
+    let { id } = res.payload;
+    if (!id) {
+        return res.status(401).json({ ok: false, message: "You have to signup first", redirect: '/signup' });
+    }
+    const user = await User.findById(id);
+    if (!user) {
+        return res.status(404).json({ ok: false, message: "User not found", redirect: '/signup' });
+    }
+    if(user.verify) {
+        return res.status(400).json({ ok: false, message: "You have already verified your email" });
+    }
+    if (user.otp && user.otpExpiry&&user.otpExpiry >= Date.now()) {
+        return res.status(400).json({ ok:true, message: "OTP already sent. Please check your email", data: user.email });
+    }
+    // Generate OTP and send email
+    const otp = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
+    const otpExpiry = Date.now() + 600000; // OTP valid for 10 minutes
+    await sendOTPEmail(user.email, otp);
+    const hashOtp = await bcrypt.hash(`${otp}`, bcryptRound);
+    user.otp = hashOtp;
+    user.otpExpiry = otpExpiry;
+    await user.save();
+    return res.json({ ok: true, message: "OTP sent to your email. Please verify.", data: user.email });
+
+}
+
+module.exports.verifyEmail = async (req, res) => {
+    let { id } = res.payload;
+    const {otp}=req.body;
+    if (!id) {
+        return res.status(401).json({ ok: false, message: "You have to signup first", redirect: '/signup' });
+    }
+    const user = await User.findById(id);
+    if (!user) {
+        return res.status(404).json({ ok: false, message: "User not found", redirect: '/signup' });
+    }
+    if (!(user.otp && user.otpExpiry&&user.otpExpiry >= Date.now())) {
+        return res.status(400).json({ ok:true, message: "OTP Expires, Resend OTP"});
+    }
+    const isMatch = await bcrypt.compare(otp, user.otp);
+    if (!isMatch) {
+        console.error("Incorrect OTP");
+        return res.status(401).json({ ok: false, message: "Incorrect OTP" });
+
+    }
+    user.otp=undefined;
+    user.otpExpiry=undefined;
+    user.verify=true;
+    await user.save();
+    return res.json({ ok: true, message: "Email is verified" });
+
+}
+
 
 module.exports.signup = async (req, res) => {
-
     let { username, password, email } = req.body;
 
     //Varifications
     if (!email || !username || !password) {
-        console.error("Please enter all required information");
         return res.status(400).json({ ok: false, message: "Pleaase Provide all the required information" });
 
     }
     if (password.length < 8) {
-        console.error("Password should be at least 8 characters long");
         return res.status(400).json({ ok: false, message: "Password should be at least 8 characters long" });
 
     }
     if (username.length < 3) {
-        console.error("Username should be at least 3 characters long");
         return res.status(400).json({ ok: false, message: "Username should be at least 3 characters long" });
 
     }
     if (email.indexOf("@") === -1) {
-        console.error("Please enter a valid email address");
         return res.status(400).json({ ok: false, message: "Please enter a valid email address" });
 
     }
@@ -231,7 +334,7 @@ module.exports.signup = async (req, res) => {
     const existingUsername = await User.findOne({ username });
     if (existingUsername) {
         console.error("Username is already registered");
-        return res.status(400).json({ ok: false, message: "Username is already registered" });
+        return res.status(400).json({ ok: false, message: "Username is not available" });
 
     }
 
@@ -256,7 +359,7 @@ module.exports.signup = async (req, res) => {
         });
         user.password = undefined;
         res.cookie("token", token, options);
-        return res.status(201).json({ ok: true, message: "Signup successful", response: user });
+        return res.status(201).json({ ok: true, message: "Signup successful, Now Varify your Email", response: user });
 
     } catch (err) {
         console.error(err);
@@ -297,12 +400,19 @@ module.exports.login = async (req, res) => {
             id: user._id,
             email: user.email,
             type: user.type,
-            isComplete: user.isComplete
+            isComplete: user.isComplete,
         }
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: '24h'
         });
         res.cookie("token", token, options);
+
+        //check if email verified or not 
+        if (!user.verify) {
+            console.error("Email is not verified");
+            return res.status(401).json({ ok: false, message: "Email is not verified", redirect: '/verifyEmail' });
+        }
+
         return res.status(200).json({ ok: true, message: "Successfully Logged in!" });
 
     } catch (err) {

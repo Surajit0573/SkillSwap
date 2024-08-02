@@ -4,6 +4,8 @@ import GridLoader from "react-spinners/GridLoader";
 import StudentProfile from './studentProfile';
 import TeacherProfile from './teacherProfile';
 import BasicProfile from './basicProfile';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const override = {
     display: "block",
     margin: "20% auto",
@@ -26,9 +28,14 @@ export default function Profile() {
             const result = await response.json();
             if (result.ok) {
                 setData(result.data);
-            }else[
+            }else{
+                toast.error(result.message);
+                if(result.redirect){
+                    navigate(result.redirect);
+                }else{
                 navigate('/login')
-            ]
+                }
+        }
         }
         fetchData();
     }, []);

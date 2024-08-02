@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const ExpressError = require("./utils/ExpressError.js");
 const { courseSchema, reviewSchema,userSchema,teacherSchema,profileSchema } = require("./schemaValidation.js");
 const jwtSecret=process.env.JWT_SECRET;
-
+const User = require("./models/user.js");
+const { Verified } = require('@mui/icons-material');
 
 module.exports.varifyJWT= async(req,res,next)=>{
     if (!req.cookies.token) {
@@ -16,7 +17,35 @@ module.exports.varifyJWT= async(req,res,next)=>{
         return res.status(401).json({ message: "You are not logged in", ok: false,redirect:'/login' });
     }
     try {
-        const decoded = await jwt.verify(token,jwtSecret);
+        const decoded = jwt.verify(token,jwtSecret);
+        const user =await User.findById(decoded.id);
+        const isVerified = user.verify;
+        if(!isVerified){
+            return res.status(401).json({message:"Your Email is not verified",ok:false,redirect:'/login'})
+        }
+        res.payload = decoded;
+        next();
+    } catch (err) {
+        console.error(err.message);
+        return res.status(401).json({ message:"Something went Wrong in varification", ok: false,redirect:null});
+    }
+}
+
+module.exports.verifyEmail= async(req,res,next)=>{
+    if (!req.cookies.token) {
+        return res.status(401).json({ message: "You have to signup first", ok: false, redirect:'/signup' });
+    }
+    const token = req.cookies.token;
+    if (!token||token.length==0) {
+        return res.status(401).json({ message: "You have to signup first", ok: false,redirect:'/signup' });
+    }
+    try {
+        const decoded = jwt.verify(token,jwtSecret);
+        const user =await User.findById(decoded.id);
+        const isVerified = user.verify;
+        if(isVerified){
+            return res.status(401).json({message:"this email is already registered",ok:false,redirect:'/login'});
+        }
         res.payload = decoded;
         next();
     } catch (err) {

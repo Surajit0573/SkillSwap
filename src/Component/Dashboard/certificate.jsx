@@ -6,6 +6,8 @@ import { json, useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -32,6 +34,7 @@ export default function Certificate() {
             console.log(currUrl);
             setUrl(currUrl);
             SetReUrl(currUrl.replace('.pdf','.png'));
+            return;
         }
         if (file != null) {
             update();
@@ -46,8 +49,10 @@ export default function Certificate() {
             setFile(selectedFile);
             console.log(url);
             await deleteFile(url);
+            toast.success("file uploaded successfully");
+            return;
         } else {
-            alert('Only image and PDF files are allowed.');
+            toast.error('Only image and PDF files are allowed');
         }
     }
 
@@ -66,14 +71,18 @@ export default function Certificate() {
                 console.log(result.data);
                 if (result.ok) {
                     setData(result.data);
+                    return;
                 } else {
                     console.error(result.message);
+                    toast.error(result.message);
                     if (result.redirect) {
                         navigate(result.redirect);
+                        return;
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
+                return;
             }
         }
 
@@ -95,14 +104,19 @@ export default function Certificate() {
             console.log(result.data);
             if (result.ok) {
                 console.log(result.message);
+                toast.success(result.message);
+                return;
             } else {
                 console.error(result.message);
+                toast.error(result.message);
                 if (result.redirect) {
                     navigate(result.redirect);
+                    return;
                 }
             }
         } catch (error) {
             console.error('Error:', error);
+            return;
         }
     }
     return (

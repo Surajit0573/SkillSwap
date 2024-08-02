@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { AppContext } from "../AppContext";
 import Sidebar from "./Dashboard/sidebar";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -28,7 +30,7 @@ export default function AddCourse() {
         async function fetchData() {
             const curr = await isLoggedin();
             if (!curr) {
-                alert("You are not logged in");
+               toast.error('You must be logged in');
                 navigate('/login');
             }
         }
@@ -129,6 +131,7 @@ export default function AddCourse() {
             const result = await response.json();
             if (!result.ok) {
                 console.log(result.message);
+                toast.error(result.message);
                 if (result.redirect) {
                     navigate(result.redirect);
                     return;
@@ -137,6 +140,7 @@ export default function AddCourse() {
                     return;
                 }
             }
+            toast.success(result.message);
             navigate('/addLesson', { state: { id: result.data._id } });
 
         } catch (error) {

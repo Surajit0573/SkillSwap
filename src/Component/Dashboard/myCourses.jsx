@@ -3,6 +3,8 @@ import Sidebar from "./sidebar";
 import {useState,useEffect} from 'react';
 import Card from "../Home/Card";
 import { NavLink,useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function MyCourses() {
     const navigate = useNavigate();
     const [data, setData] = useState(null);
@@ -21,15 +23,18 @@ export default function MyCourses() {
                 console.log(result.data);
                 if (result.ok) {
                     setData(result.data);
+                    return;
                 } else {
-                    alert(result.message);
+                    toast.error(result.message);
                     console.error(result.message);
                     if (result.redirect) {
                         navigate(result.redirect);
+                        return;
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
+                return;
             }
         }
 

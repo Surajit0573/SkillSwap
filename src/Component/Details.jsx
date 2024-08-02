@@ -8,6 +8,8 @@ import Related from "./Details/Related";
 import { useLocation } from "react-router-dom";
 import '../style/Details.css'
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Details() {
     const location = useLocation();
     const [data, setData] = useState(null);
@@ -24,10 +26,15 @@ export default function Details() {
             const result = await responce.json();
             if (result.ok) {
                 console.log(result.data);
+                toast.success(result.message);
                 setData(result.data);
                 return;
             } else {
-                alert(result.message);
+               toast.error(result.message);
+               if(result.redirect){
+                navigate(result.redirect);
+                return;
+               }
                 navigate('/');
                 return;
             }

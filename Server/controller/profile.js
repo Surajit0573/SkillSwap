@@ -76,16 +76,19 @@ module.exports.dashboard = async (req, res, next) => {
 };
 
 module.exports.getCertificate = async (req, res) => {
-    const { id } = res.payload;
+    const { id,isComplete } = res.payload;
     const user = await User.findById(id).populate('profile');
     if (!user) {
         return res.status(500).json({ ok: false, message: "Something went wrong",redirect:'/login' });
+    }
+    if(!isComplete){
+        return res.status(403).json({ ok: false, message: "Complete your profile first",redirect:'/dashboard' });
     }
     return res.status(200).json({ ok: true, message: `Certificates Fetchs successfully`, data: user.profile.certifications });
 };
 
 module.exports.updateCertificate = async (req, res) => {
-    const { id } = res.payload;
+    const { id,isComplete } = res.payload;
     const {url}=req.body;
     try{
     if(!url||url.length<=0){
@@ -94,6 +97,9 @@ module.exports.updateCertificate = async (req, res) => {
     const user = await User.findById(id).populate('profile');
     if (!user) {
         return res.status(500).json({ ok: false, message: "Something went wrong",redirect:'/login' });
+    }
+    if(!isComplete){
+        return res.status(403).json({ ok: false, message: "Complete your profile first",redirect:'/dashboard' });
     }
     let newCertificates=user.profile.certifications;
     newCertificates.push(url);
