@@ -5,12 +5,13 @@ import About from "./Details/About";
 import Teacher from "./Details/Teacher";
 import Reviews from "./Details/Reviews";
 import Related from "./Details/Related";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import '../style/Details.css'
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export default function Details() {
+    const navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
     useEffect(() => {
@@ -46,7 +47,7 @@ export default function Details() {
         <>
             <Navbar />
             <CourseDetails data={data} />
-            <Lessons data={data&&data.sections}/>
+            <Lessons data={data&&data.sections} id={data&&data._id}/>
             <About data={data}/>
             <Teacher data={data&&data.teacher}/>
             <Reviews data={data}/>
