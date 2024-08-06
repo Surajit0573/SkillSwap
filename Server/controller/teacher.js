@@ -1,5 +1,6 @@
 const { redirect } = require("react-router-dom");
 const Teacher = require("../models/teacher.js");
+const Review = require("../models/reviews.js");
 const User = require("../models/user.js");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -33,6 +34,13 @@ module.exports.deleteTeacher = async (req, res) => {
         return res.status(404).json({ ok: false, message: "User not found", data: null });
     }
     let courses = user.teacher.courses;
+    //delete reviews 
+    await Review.deleteMany({auther: user._id}).then((r) => {
+        console.log(`Deleted ${r.deletedCount} reviews`);
+    }).catch((err) => {
+        console.error(`Error deleting reviews: ${err}`);
+    });
+    //delete
     courses.map(async (c) => {
         await Course.findByIdAndDelete(c).then((c) => {
             console.log(`Deleted course: ${c&&c.title}`);

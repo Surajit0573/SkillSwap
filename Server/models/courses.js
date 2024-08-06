@@ -50,7 +50,7 @@ const coursesSchema = new mongoose.Schema({
   ],
   teacher: { type: Schema.Types.ObjectId, ref: "User" },
   teacherName: { type: String, required: true },
-  enrolledUsers: { type: Number, default: 0 },
+  enrolledUsers: [{ type: Schema.Types.ObjectId, ref: "User"}],
   rating: { type: Number, default: 0 },
   language: { type: String, default: "English" },
 

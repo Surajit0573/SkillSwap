@@ -12,6 +12,28 @@ const options = {
     secure: true,
 }
 
+module.exports.show = async (req, res, next) => {
+    const { username } = req.params;
+    console.log(username);
+    try{
+    const user = await User.findOne({username:username}).populate({
+        path: 'teacher',
+        populate: {
+            path: 'courses',
+            model: 'Course'
+        }
+    }).populate('profile');
+    if (!user) {
+        return res.status(500).json({ ok: false, message: "Something went wrong" });
+    }
+    user.password = undefined;
+    return res.status(200).json({ ok: true, message: `Welcome ${user.type}`, data: user });
+}catch(e){
+    console.error(e);
+    return res.status(500).json({ ok: false, message: "Something went wrong" });
+}
+};
+
 module.exports.getProfile = async (req, res, next) => {
     const { id, type, isComplete } = res.payload;
     if (isComplete) {
@@ -61,51 +83,56 @@ module.exports.updateProfile = async (req, res, next) => {
 
 module.exports.dashboard = async (req, res, next) => {
     const { id, type, isComplete } = res.payload;
-    const user = await User.findById(id).populate({
-        path: 'teacher',
-        populate: {
-            path: 'courses',
-            model: 'Course'
+    try {
+        const user = await User.findById(id).populate({
+            path: 'teacher',
+            populate: {
+                path: 'courses',
+                model: 'Course'
+            }
+        }).populate('profile');
+        if (!user) {
+            return res.status(500).json({ ok: false, message: "Something went wrong" });
         }
-    }).populate('profile');
-    if (!user) {
-        return res.status(500).json({ ok: false, message: "Something went wrong" });
+        user.password = undefined;
+        return res.status(200).json({ ok: true, message: `Welcome ${type}`, data: user });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ ok: false, message: "Server error" });
     }
-    user.password = undefined;
-    return res.status(200).json({ ok: true, message: `Welcome ${type}`, data: user });
 };
 
 module.exports.getCertificate = async (req, res) => {
-    const { id,isComplete } = res.payload;
+    const { id, isComplete } = res.payload;
     const user = await User.findById(id).populate('profile');
     if (!user) {
-        return res.status(500).json({ ok: false, message: "Something went wrong",redirect:'/login' });
+        return res.status(500).json({ ok: false, message: "Something went wrong", redirect: '/login' });
     }
-    if(!isComplete){
-        return res.status(403).json({ ok: false, message: "Complete your profile first",redirect:'/dashboard' });
+    if (!isComplete) {
+        return res.status(403).json({ ok: false, message: "Complete your profile first", redirect: '/dashboard' });
     }
     return res.status(200).json({ ok: true, message: `Certificates Fetchs successfully`, data: user.profile.certifications });
 };
 
 module.exports.updateCertificate = async (req, res) => {
-    const { id,isComplete } = res.payload;
-    const {url}=req.body;
-    try{
-    if(!url||url.length<=0){
-        return res.status(400).json({ok:false,message:"Select a Valid File"});
-    }
-    const user = await User.findById(id).populate('profile');
-    if (!user) {
-        return res.status(500).json({ ok: false, message: "Something went wrong",redirect:'/login' });
-    }
-    if(!isComplete){
-        return res.status(403).json({ ok: false, message: "Complete your profile first",redirect:'/dashboard' });
-    }
-    let newCertificates=user.profile.certifications;
-    newCertificates.push(url);
-    const profile=await Profile.findByIdAndUpdate(user.profile._id,{$set:{certifications:[...newCertificates]}},{new:true})
-    return res.status(200).json({ ok: true, message: `Certificates Added successfully`, data: user.profile.certifications });
-    }catch(e){
+    const { id, isComplete } = res.payload;
+    const { url } = req.body;
+    try {
+        if (!url || url.length <= 0) {
+            return res.status(400).json({ ok: false, message: "Select a Valid File" });
+        }
+        const user = await User.findById(id).populate('profile');
+        if (!user) {
+            return res.status(500).json({ ok: false, message: "Something went wrong", redirect: '/login' });
+        }
+        if (!isComplete) {
+            return res.status(403).json({ ok: false, message: "Complete your profile first", redirect: '/dashboard' });
+        }
+        let newCertificates = user.profile.certifications;
+        newCertificates.push(url);
+        const profile = await Profile.findByIdAndUpdate(user.profile._id, { $set: { certifications: [...newCertificates] } }, { new: true })
+        return res.status(200).json({ ok: true, message: `Certificates Added successfully`, data: user.profile.certifications });
+    } catch (e) {
         console.error(e);
         return res.status(500).json({ ok: false, message: "Server error" });
     }

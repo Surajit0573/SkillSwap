@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import LessonCard from './LessonCard';
-export default function Lesson({ data, id }) {
+export default function Lesson({ data, id,isOwner}) {
     return (
         <>
             <div className="lessons">
                 <div className="title">
                     <h2 className='text-2xl'>Lessons in This Class</h2>
                     <h3 className='text-xl'>{data && data.length} Lessons(3h 50m)</h3>
-                    {id && (
+                    {id && isOwner && (
                         <NavLink to="/coursePlayer" state={{ id }}>
                             <button className="bg-blue-600 p-4 m-4 rounded-md">GO TO COURSE PLAYER</button>
                         </NavLink>

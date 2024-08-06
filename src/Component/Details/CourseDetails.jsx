@@ -96,7 +96,7 @@ export default function CourseDetails({ data }) {
             <div className="CourseDetails">
                 <div className="title text-left mr-16">
                     <h1 className="text-5xl leading-[4rem] font-semibold">{data && data.title}</h1>
-                    <h3 className="text-2xl my-8 items-center">{data && data.rating} {data && <Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.1} readOnly />} <span className='text-lg'>(4500 ratings)</span>, {data && data.enrolledUsers} Students</h3>
+                    <h3 className="text-2xl my-8 items-center">{data && data.rating} {data && <Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.1} readOnly />} <span className='text-lg'>({data&&data.reviews.length} ratings)</span>, {data && data.enrolledUsers} Students</h3>
                     <p className='text-xl my-4'>Created by {data && data.teacherName}, {data && data.teacher.teacher.qualifications}</p>
                     <p className='text-lg'>{data && data.tags.map((t, index) => <span key={index}>#{t} </span>)}</p>
                     {/* <p>Last updated{}</p> */}

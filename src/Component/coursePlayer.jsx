@@ -29,12 +29,14 @@ export default function CoursePlayer() {
     setNumPages(numPages);
   }
   function extractCloudinaryPath(url) {
-    console.log(url);
-    const dotParts = url.split('.');
-    const secondLastPart = dotParts[dotParts.length - 2];
-    const parts = secondLastPart.split('/');
-    const extractedPath = parts.slice(-2).join('/');
-    return extractedPath;
+    if (url && url.length > 0) {
+      console.log("URL : ", url);
+      const dotParts = url.split('.');
+      const secondLastPart = dotParts[dotParts.length - 2];
+      const parts = secondLastPart.split('/');
+      const extractedPath = parts.slice(-2).join('/');
+      return extractedPath;
+    }
   }
 
   const handleMouseDown = (e) => {
@@ -66,7 +68,14 @@ export default function CoursePlayer() {
     const { id } = state;
     console.log(id);
     async function fetchData() {
-      const responce = await fetch(`http://localhost:3000/api/courses/${id}`);
+      const responce = await fetch(`http://localhost:3000/api/courses/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        withCredentials: true,
+      });
       const result = await responce.json();
       if (result.ok) {
         console.log(result.data);
@@ -119,10 +128,10 @@ export default function CoursePlayer() {
 
             <div className="flex items-center">
               <button onClick={() => setScale(scale - 0.1)} className="mx-2 bg-blue-600 p-2 rounded-md  ">
-              <i class="fa-solid fa-minus"></i>
+                <i class="fa-solid fa-minus"></i>
               </button>
               <button onClick={() => setScale(scale + 0.1)} className="mx-2 bg-blue-600 p-2 rounded-md">
-              <i class="fa-solid fa-plus"></i>
+                <i class="fa-solid fa-plus"></i>
               </button></div>
 
             <div className="flex items-center">
@@ -135,7 +144,7 @@ export default function CoursePlayer() {
               <button disabled={pageNumber >= numPages} onClick={() => setPageNumber(pageNumber + 1)} className="mx-2 bg-blue-600 p-2 rounded-md  disabled:bg-blue-950 disabled:text-gray-500">
                 Next
               </button></div>
-              </div>}
+          </div>}
 
           {publicId && publicId.split('/')[0] == "video" ? <VideoPlayer
             id="player2"

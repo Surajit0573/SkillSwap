@@ -29,7 +29,7 @@ export default function Content() {
     }, []);
     return (
         <>
-            <div className="content">
+            <div className="content ">
             {data&&data.map((d,index)=>(<Card key={index} data={d} />))} 
             </div>
         </>

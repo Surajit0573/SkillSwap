@@ -86,7 +86,13 @@ module.exports.payment = async (req, res) => {
         }, { idempotencyKey });
 
         // Extract all the product _id from products and add them to the user's buyCourses
-        const buyCourses = products.map((product) => product._id);
+        const buyCourses = await Promise.all(products.map(async (product) => {
+            const currId = product._id;
+            let course = await Course.findById(currId);
+            course.enrolledUsers.push(user._id);
+            await course.save();
+            return currId;
+        }));
         user.buyCourses = [...user.buyCourses, ...buyCourses];
         user.cart = [];
         await user.save();
@@ -178,6 +184,10 @@ module.exports.addToCart = async (req, res) => {
             console.error("Course already exists in cart");
             return res.status(400).json({ ok: false, message: "Course already exists in cart", data: null });
         }
+        if (user.buyCourses.includes(course_id)) {
+            console.error("Course already bought by user");
+            return res.status(400).json({ ok: false, message: "Course already bought by user", data: null });
+        }
         user.cart = [...user.cart, course_id];
         await user.save();
         return res.status(200).json({ ok: true, message: "Course Added to Cart successfully", data: user.cart });
@@ -256,11 +266,11 @@ module.exports.getEmail = async (req, res) => {
     if (!user) {
         return res.status(404).json({ ok: false, message: "User not found", redirect: '/signup' });
     }
-    if(user.verify) {
+    if (user.verify) {
         return res.status(400).json({ ok: false, message: "You have already verified your email" });
     }
-    if (user.otp && user.otpExpiry&&user.otpExpiry >= Date.now()) {
-        return res.status(400).json({ ok:true, message: "OTP already sent. Please check your email", data: user.email });
+    if (user.otp && user.otpExpiry && user.otpExpiry >= Date.now()) {
+        return res.status(400).json({ ok: true, message: "OTP already sent. Please check your email", data: user.email });
     }
     // Generate OTP and send email
     const otp = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
@@ -276,7 +286,7 @@ module.exports.getEmail = async (req, res) => {
 
 module.exports.verifyEmail = async (req, res) => {
     let { id } = res.payload;
-    const {otp}=req.body;
+    const { otp } = req.body;
     if (!id) {
         return res.status(401).json({ ok: false, message: "You have to signup first", redirect: '/signup' });
     }
@@ -284,8 +294,8 @@ module.exports.verifyEmail = async (req, res) => {
     if (!user) {
         return res.status(404).json({ ok: false, message: "User not found", redirect: '/signup' });
     }
-    if (!(user.otp && user.otpExpiry&&user.otpExpiry >= Date.now())) {
-        return res.status(400).json({ ok:true, message: "OTP Expires, Resend OTP"});
+    if (!(user.otp && user.otpExpiry && user.otpExpiry >= Date.now())) {
+        return res.status(400).json({ ok: true, message: "OTP Expires, Resend OTP" });
     }
     const isMatch = await bcrypt.compare(otp, user.otp);
     if (!isMatch) {
@@ -293,9 +303,9 @@ module.exports.verifyEmail = async (req, res) => {
         return res.status(401).json({ ok: false, message: "Incorrect OTP" });
 
     }
-    user.otp=undefined;
-    user.otpExpiry=undefined;
-    user.verify=true;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    user.verify = true;
     await user.save();
     return res.json({ ok: true, message: "Email is verified" });
 

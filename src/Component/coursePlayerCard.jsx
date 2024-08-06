@@ -14,12 +14,15 @@ export default function LessonCard({ name, data, num, id }) {
   };
 
   function extractCloudinaryPath(url) {
+    if(url&&url.length>0){
+      console.log("URL : ",url);
     console.log(url);
     const dotParts = url.split('.');
     const secondLastPart = dotParts[dotParts.length - 2];
     const parts = secondLastPart.split('/');
     const extractedPath = parts.slice(-2).join('/');
     return extractedPath;
+    }
   }
 
 

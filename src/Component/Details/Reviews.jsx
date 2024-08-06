@@ -67,7 +67,7 @@ export default function Reviews({ data }) {
           <textarea placeholder='Write your review here...' rows={5} className='w-full h-24 mt-2 p-2 rounded-md bg-[#222831]' value={review} onChange={handleChange}></textarea>
           <button className='bg-blue-600 px-4 py-2 rounded-md' onClick={handleSubmit}>Submit</button>
         </div>
-        {reviews&&reviews.map((r)=><Review data={r}/>)}
+        {reviews&&reviews.map((r)=><Review id={r} courseId={data._id}/>)}
       </div>
     </>
   )

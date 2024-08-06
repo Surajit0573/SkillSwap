@@ -19,4 +19,6 @@ router.get("/dashboard",varifyJWT, asyncWrap(profileContoller.dashboard));
 router.route("/certificate")
     .get(varifyJWT, asyncWrap(profileContoller.getCertificate))
     .post(varifyJWT, asyncWrap(profileContoller.updateCertificate));
+
+router.get("/:username", asyncWrap(profileContoller.show));
 module.exports = router;

@@ -11,7 +11,8 @@ export default function Navbar() {
   const location = useLocation();
   const { isLoggedin } = useContext(AppContext);
   const [isLog, setIsLog] = useState(false);
-
+  const [isTeacher, setTeacher] = useState(false);
+  const [isComplete,setComplete] =useState(false);
   useEffect(() => {
     async function fetchData() {
       const curr = await isLoggedin();
@@ -67,7 +68,7 @@ export default function Navbar() {
           <NavLink to={"/signup"}><button className='bg-black text-white p-2 text-lg rounded-xl'>Sign UP</button></NavLink></>}
 
 
-        <NavLink to={"/profile"}><img src='https://shorturl.at/3YD9s' className='h-12 w-12 rounded-full mx-2' ></img></NavLink>
+        <NavLink to={"/profile/"}><img src='https://shorturl.at/3YD9s' className='h-12 w-12 rounded-full mx-2' ></img></NavLink>
       </div>
 
 

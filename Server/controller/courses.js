@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV!="production"){
+    require('dotenv').config();
+  }
+const jwt = require('jsonwebtoken');
+const jwtSecret=process.env.JWT_SECRET;
 const { redirect } = require("react-router-dom");
 const Course = require("../models/courses.js");
 const User = require("../models/user.js");
@@ -24,9 +29,6 @@ module.exports.index = async (req, res) => {
     }
 };
 
-// module.exports.newForm = (req, res) => {
-//     res.render("./listings/create");
-// };
 
 module.exports.create = async (req, res) => {
     const { id, type } = res.payload;
@@ -71,7 +73,7 @@ module.exports.addLessons = async (req, res) => {
 module.exports.show = async (req, res) => {
     const {id}=req.params;
     try{
-        let course = await Course.findById(id).populate('reviews');
+        let course = await Course.findById(id);
         if (!course) {
             console.error("No courses found");
             return res.status(404).json({ ok: false, message: "No courses found", redirect: '/', data: null });
@@ -79,7 +81,23 @@ module.exports.show = async (req, res) => {
             const user= await User.findById(course.teacher).populate('profile').populate('teacher');
             user.password=undefined;
             course.teacher=user;
-        res.status(201).json({ ok:true,message:"Course Fetched Successfully", data: course });
+            //is owner
+            let isOwner=false;
+            if(req.cookies.token&&req.cookies.token.length>0){
+                const decoded = jwt.verify(req.cookies.token,jwtSecret);
+                const currUser =await User.findById(decoded.id);
+                const isVerified = currUser.verify;
+                if(isVerified){
+                    isOwner=(currUser.buyCourses.includes(course._id));
+                    console.log('isOwner : ',isOwner);
+                }
+            }
+            if(!isOwner){
+                course.sections.map((section)=>(section.lessons.map((lesson)=>lesson.url='')));
+            }
+            console.log('isOwner : ',isOwner);
+            console.log('Course : ',course.sections);
+        res.status(201).json({ ok:true,message:"Course Fetched Successfully", data: course,isOwner});
         } catch (e) {
             console.error(e);
             return res.status(500).json({ ok: false, message: "Server error" });
