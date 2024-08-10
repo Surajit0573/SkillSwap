@@ -1,21 +1,28 @@
-import Card from './Card';
+import NavBar from './Navbar';
+import Card from './Home/Card';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-export default function Content() {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+export default function Body() {
     const navigate = useNavigate();
-    const Url = "http://localhost:3000/api/courses";
     let [data,setdata]=useState();
     useEffect(() => {
         async function fetchdata() {
             try{
-            const response = await fetch(Url);
+            const response = await fetch('http://localhost:3000/api/courses/like', {
+                credentials: 'include',
+                withCredentials: true,
+              });
             const result = await response.json();
+            console.log(result);
             if(result.ok){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 console.log(result);
                 setdata(result.data);
                 return;
             }else{
                 console.log(result.message);
+                toast.error(result.message);
                 if(result.redirect){
                     navigate(result.redirect);
                 }
@@ -23,14 +30,18 @@ export default function Content() {
             }
             }catch(err){
                 console.log(err);
+                toast.error('Something went wrong');
             }
         }
         fetchdata();
     }, []);
+
     return (
         <>
+            <NavBar />
+            <p className='text-3xl m-4 text-left font-semibold'>Your WishList</p>
             <div className="content ">
-            {data&&data.map((d,index)=>(<Card key={index} data={d}  />))} 
+                {data && data.map((d, index) => (<Card key={index} data={d} />))}
             </div>
         </>
     )

@@ -257,6 +257,27 @@ module.exports.isLoggedin = async (req, res) => {
     return res.json({ ok: true, message: "User is Logged In" });
 }
 
+module.exports.getInfo = async (req, res) => {
+    let { id } = res.payload;
+    if (!id) {
+        console.error("User not logged in");
+        return res.status(401).json({ ok: false, message: "User not logged in" });
+    }
+    const user = await User.findById(id).populate('profile');
+    if (!user) {
+        console.error("User not found");
+        return res.status(404).json({ ok: false, message: "User not found" });
+    }
+    let dp=null;
+    if(user.isComplete){
+        dp = user.profile.dp;
+    }else{
+        dp=`https://api.multiavatar.com/${user.username}.png`
+    }
+    return res.json({ ok: true, message: "User is Logged In", isTeacher:user.type == "instructor", isComplete:user.isComplete, dp:dp });
+}
+
+
 module.exports.getEmail = async (req, res) => {
     let { id } = res.payload;
     if (!id) {
@@ -368,6 +389,7 @@ module.exports.signup = async (req, res) => {
             expiresIn: '24h'
         });
         user.password = undefined;
+        res.clearCookie("token", options);
         res.cookie("token", token, options);
         return res.status(201).json({ ok: true, message: "Signup successful, Now Varify your Email", response: user });
 
@@ -382,16 +404,17 @@ module.exports.signup = async (req, res) => {
 
 
 module.exports.login = async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     //Varifications
-    if (!username || !password) {
+    if (!email || !password) {
         console.error("Please enter all required information");
         return res.status(400).json({ ok: false, message: "Pleaase Provide all the required information" });
 
     }
     //Check if user exists
-    const user = await User.findOne({ username });
+    try {
+    const user = await User.findOne({ email });
     if (!user) {
         console.error("User not found");
         return res.status(404).json({ ok: false, message: "User not found" });
@@ -404,8 +427,6 @@ module.exports.login = async (req, res) => {
         return res.status(401).json({ ok: false, message: "Incorrect password" });
 
     }
-    try {
-        const user = await User.findOne({ username });
         const payload = {
             id: user._id,
             email: user.email,
@@ -415,6 +436,7 @@ module.exports.login = async (req, res) => {
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: '24h'
         });
+        res.clearCookie("token", options);
         res.cookie("token", token, options);
 
         //check if email verified or not 
@@ -441,6 +463,37 @@ module.exports.logout = (req, res) => {
     res.status(201).json({ status: 200, massege: "Successfully logged out", ok: true, });
 
 };
+
+module.exports.signOutTeach = async(req, res) => {
+    const { id } = res.payload;
+    try{
+        let user = await User.findById(id);
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        user.type='learner';
+        user.save();
+        const payload = {
+            id: user._id,
+            email: user.email,
+            type: user.type,
+            isComplete: user.isComplete,
+        }
+        const token = jwt.sign(payload, jwtSecret, {
+            expiresIn: '24h'
+        });
+        res.clearCookie("token", options);
+        res.cookie("token", token, options);
+        res.status(201).json({ status: 200, massege: "Successfully logged out as instructor", ok: true, });
+    }catch(e){
+        console.error(e.message);
+        return res.status(500).json({ ok: false, message: "Something went wrong" });
+    }
+    
+
+};
+
 
 module.exports.changePass = async (req, res) => {
     const { id } = res.payload;

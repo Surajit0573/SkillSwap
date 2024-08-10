@@ -13,7 +13,8 @@ router.post("/signup",validateuser, asyncWrap(userContoller.signup));
 router.post("/login",asyncWrap(userContoller.login));
 router.get("/logout", varifyJWT,userContoller.logout);
 router.get('/myCourses',varifyJWT,asyncWrap(userContoller.getCourses));
-
+router.get('/getInfo',varifyJWT,asyncWrap(userContoller.getInfo));
+router.get('/signOutTeach',varifyJWT,asyncWrap(userContoller.signOutTeach));
 
 router.route("/changePass")
 .get(varifyJWT,asyncWrap(userContoller.changePass))

@@ -85,10 +85,26 @@ module.exports.info = async (req, res) => {
         return res.status(400).json({ ok: false, message: "Please complete your profile first", redirect: '/dashboard', data: null });
     }
     try {
-        const user = await User.findById(id).populate('profile');
+        let user = await User.findById(id).populate('profile');
         if (!user) {
             console.error("User not found");
             return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        if(user.teacher){
+            user.type = 'instructor';
+            await user.save();
+            const payload = {
+                id: user._id,
+                email: user.email,
+                type: user.type,
+                isComplete: user.isComplete,
+            }
+            const token = jwt.sign(payload, jwtSecret, {
+                expiresIn: '24h'
+            });
+            res.clearCookie("token", options);
+            res.cookie("token", token, options);
+            return res.status(400).json({ ok: false, message: "You got signed in as a instructor", redirect: '/profile', data: null });
         }
         return res.status(200).json({ ok: true, message: "Fill some Additional Information", data: user.profile });
     } catch (error) {

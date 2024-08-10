@@ -46,7 +46,7 @@ export default function Login() {
   }
 
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: ''
   });
 
@@ -96,7 +96,7 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <div className="signup-form">
             <h1>Login and start learning</h1>
-            <TextField id="outlined-basic" label="Full Name" name='username' value={formData.username} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
+            <TextField id="outlined-basic" label="Email" name='email' value={formData.email} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
             <TextField id="outlined-basic" label="Password" name='password' value={formData.password} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
             <Button type='submit' variant="contained" size="medium">Log In</Button>
             <p>Doesn't have an account? <NavLink to='/signup'>Sign Up</NavLink></p>

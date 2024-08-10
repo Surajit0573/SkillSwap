@@ -38,7 +38,7 @@ export default function BecomeTeach() {
 
       } catch (e) {
         console.error(e);
-        // TODO: Handle error appropriately
+       toast.error('Something went wrong');
       }
     }
     fetchData();

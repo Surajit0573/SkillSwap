@@ -16,6 +16,7 @@ import BoughtCourses from './Component/Dashboard/boughtCourses.jsx';
 import Cart from './Component/Cart.jsx';
 import VerifyEmail from './Component/VerifyEmail.jsx';
 import CoursePlayer from './Component/coursePlayer.jsx';
+import WishList from './Component/wishlist.jsx';
 function App() {
 
   return (
@@ -38,6 +39,7 @@ function App() {
       <Route path="/dashboard/myCourses" element={<MyCourses />} />
       <Route path="/dashboard/boughtCourses" element={<BoughtCourses />} />
       <Route path="/coursePlayer/" element={<CoursePlayer />} />
+      <Route path="/wishlist" element={<WishList/>}/>
       <Route path="*" element={<h1>Page Not Found</h1>} />
     </Routes>
     </>
