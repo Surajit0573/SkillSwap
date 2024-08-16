@@ -6,7 +6,6 @@ const ExpressError = require("./utils/ExpressError.js");
 const { courseSchema, reviewSchema,userSchema,teacherSchema,profileSchema } = require("./schemaValidation.js");
 const jwtSecret=process.env.JWT_SECRET;
 const User = require("./models/user.js");
-const { Verified } = require('@mui/icons-material');
 
 module.exports.varifyJWT= async(req,res,next)=>{
     if (!req.cookies.token) {

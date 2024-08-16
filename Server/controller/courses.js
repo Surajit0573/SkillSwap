@@ -3,7 +3,6 @@ if (process.env.NODE_ENV != "production") {
 }
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
-const { redirect } = require("react-router-dom");
 const Course = require("../models/courses.js");
 const User = require("../models/user.js");
 const Teacher = require("../models/teacher.js");

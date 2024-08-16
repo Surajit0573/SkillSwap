@@ -1,4 +1,4 @@
-const { redirect } = require("react-router-dom");
+
 const Teacher = require("../models/teacher.js");
 const Review = require("../models/reviews.js");
 const User = require("../models/user.js");

@@ -1,4 +1,4 @@
-const { redirect } = require("react-router-dom");
+
 const Profile = require("../models/profile.js");
 const User = require("../models/user.js");
 const bcrypt = require('bcrypt');
