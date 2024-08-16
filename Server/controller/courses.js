@@ -7,6 +7,8 @@ const { redirect } = require("react-router-dom");
 const Course = require("../models/courses.js");
 const User = require("../models/user.js");
 const Teacher = require("../models/teacher.js");
+
+
 module.exports.index = async (req, res) => {
     try {
         let courses = await Course.find();
@@ -28,6 +30,22 @@ module.exports.index = async (req, res) => {
         return res.status(500).json({ ok: false, message: "Server error" });
     }
 };
+
+module.exports.getCategory = async (req, res) => {
+    const {name}=req.params;
+    console.log(req.params);
+    try {
+        let courses = await Course.find({category:name});
+        if (!courses) {
+            return res.status(404).json({ ok: false, message: "No courses found in this category", data: null });
+        }
+        res.status(201).json({ ok: true, message: "Courses Fetched Successfully", data: courses });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ ok: false, message: "Server error" });
+    }
+};
+
 
 module.exports.getWishlist = async (req, res) => {
     const { id } = res.payload;
@@ -52,6 +70,7 @@ module.exports.create = async (req, res) => {
         return res.status(400).json({ ok: false, message: "You are not an instructor", redirect: '/becomeTeach', data: null });
     }
     let { course, tags, url } = req.body;
+    course={...course,category:course.category.toLowerCase()};
     try {
         const user = await User.findById(id).populate('teacher').populate('profile');
         if (!user) {

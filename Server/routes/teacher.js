@@ -13,6 +13,7 @@ router.get('/',varifyJWT,teacherContoller.isTeacher);
 router.delete('/',varifyJWT,teacherContoller.deleteTeacher);
 //Signup
 router.get("/info",varifyJWT,asyncWrap(teacherContoller.info));
+router.get("/performence",varifyJWT,asyncWrap(teacherContoller.performence));
 router.post("/signup",varifyJWT,validateteacher, asyncWrap(teacherContoller.signupForm));
 
 router.get("/myCourses",varifyJWT, asyncWrap(teacherContoller.myCourses));

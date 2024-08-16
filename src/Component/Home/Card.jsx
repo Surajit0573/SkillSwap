@@ -44,19 +44,19 @@ export default function Card({data}) {
         <>
             <div className="card" onClick={clickHandeler}>
 
-                <img src={data&&data.thumbnail} alt="" />
+                <img src={data&&data.thumbnail} alt=""/>
                 <div className="info text-lg">
-                    <p>{data&&data.enrolledUsers.length} Students</p>
-                    <p>3h 50m</p>
+                    <p className='text-sm'>{data&&data.enrolledUsers.length} Students</p>
+                    <p  className='text-sm'>3h 50m</p>
                 </div>
-              <h4 className="text-xl">{data&&data.title}</h4>
+              <h4 className="text-lg my-2">{data&&data.title}</h4>
               <div className="detail">
-              <h3 className="text-xl mb-2 flex items-center">{data&&data.rating} {data&&<Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.1} readOnly />}({data&&data.reviews.length})</h3>
-              <p className='text-xl'>Price: Rs {data&&data.price}</p>
+              <h3 className="text-lg mb-[3px] flex items-center">{data&&data.rating} {data&&<Rating name="half-rating-read" defaultValue={data && data.rating} precision={0.1} readOnly />}({data&&data.reviews.length})</h3>
+              <p className='text-lg'><i className="fa-solid fa-indian-rupee-sign"></i> {data&&data.price}</p>
               </div>
               <div className="info">
-                <p>{data&&data.teacherName}</p>
-                {isLiked?<i className="fa-solid fa-heart text-red-600 text-xl"></i>:<i className="fa-regular fa-heart text-xl"></i>}
+                <p className='text-md'>{data&&data.teacherName}</p>
+                {isLiked?<i className="fa-solid fa-heart text-red-600 text-lg"></i>:<i className="fa-regular fa-heart text-xl"></i>}
               </div>
             </div>
 

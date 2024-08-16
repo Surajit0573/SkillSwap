@@ -63,7 +63,7 @@ export default function UpdateProfile() {
             } else {
                 console.log(result.message);
                 toast.error(result.message);
-                if(result.redirect){
+                if (result.redirect) {
                     navigate(result.redirect);
                 }
             }
@@ -161,7 +161,7 @@ export default function UpdateProfile() {
             } else {
                 console.log(result.message);
                 toast.error(result.message);
-                if(result.redirect){
+                if (result.redirect) {
                     navigate(result.redirect);
                 }
             }
@@ -175,12 +175,6 @@ export default function UpdateProfile() {
             <div className="addCourse">
                 <h1 className="text-3xl m-4">{heading}</h1>
                 <div className="addCourseForm">
-                    <TextField id="outlined-basic" name="fullname" value={profile.fullname} onChange={handleChange} label='Full Name' variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-multiline-static" name="about" value={profile.about} onChange={handleChange} label="Write something about you" multiline rows={3} sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="skills" value={skill} onChange={(e) => setSkill(e.target.value)} onKeyDown={addSkill} label='Add Skills' variant="outlined" sx={styles} className='inputtext' />
-                    <div className="showTags">
-                        {skills.map((t, index) => (<div key={index} className="oneTag">{t}<button name={t} onClick={deleteSkill}><i name={t} className="fa-solid fa-xmark flex self-center"></i></button></div>))}
-                    </div>
                     <div className='upload w-[535px]'>
                         <img src={url}></img>
                         <Button
@@ -196,6 +190,12 @@ export default function UpdateProfile() {
 
                             <VisuallyHiddenInput type="file" />
                         </Button>
+                    </div>
+                    <TextField id="outlined-basic" name="fullname" value={profile.fullname} onChange={handleChange} label='Full Name' variant="outlined" sx={styles} className='inputtext' required />
+                    <TextField id="outlined-multiline-static" name="about" value={profile.about} onChange={handleChange} label="Write something about you" multiline rows={3} sx={styles} className='inputtext' required />
+                    <TextField id="outlined-basic" name="skills" value={skill} onChange={(e) => setSkill(e.target.value)} onKeyDown={addSkill} label='Add Skills' variant="outlined" sx={styles} className='inputtext' />
+                    <div className="showTags">
+                        {skills.map((t, index) => (<div key={index} className="oneTag">{t}<button name={t} onClick={deleteSkill}><i name={t} className="fa-solid fa-xmark flex self-center"></i></button></div>))}
                     </div>
                     <TextField id="outlined-basic" name="website" value={links.website} onChange={handleLinkChange} label='Website Link' variant="outlined" sx={styles} className='inputtext' required />
                     <TextField id="outlined-basic" name="twitter" value={links.twitter} onChange={handleLinkChange} label='Twitter Link' variant="outlined" sx={styles} className='inputtext' required />

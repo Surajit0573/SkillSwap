@@ -5,6 +5,7 @@ const router = express.Router();
 const { validateCourse, varifyJWT } = require("../middleware.js");
 const coursesController = require("../controller/courses.js");
 
+router.get('/category/:name',asyncWrap(coursesController.getCategory));
 
 router.route("/")
     .get(asyncWrap(coursesController.index)) //Read Route
@@ -15,6 +16,7 @@ router.route("/")
 router.route('/like')
     .post(varifyJWT, asyncWrap(coursesController.like))
     .get(varifyJWT, asyncWrap(coursesController.getWishlist));
+
 
 router.route("/:id/addLessons")
     .post(varifyJWT, asyncWrap(coursesController.addLessons));

@@ -18,6 +18,53 @@ const options = {
     secure: true,
 }
 
+const monthNames = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  async function updateTeachersPerformance(products, user) {
+    const currentDate = new Date(Date.now());
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = monthNames[currentDate.getMonth()];
+  
+    for (const product of products) {
+      try {
+        // Fetch the teacher document
+        const teacher = await User.findById(product.teacher);
+  
+        if (!teacher) {
+          console.log(`No teacher found for product: ${product._id}`);
+          continue;
+        }
+  
+        console.log("Teacher: ", teacher);
+  
+        // Create the performance object
+        const performance = {
+          year: currentYear,
+          month: currentMonth,
+          studentName: user.username,
+          course: product._id, // Assuming course ID is the reference
+        };
+  
+        // Add the performance to the teacher's document
+        if (Array.isArray(teacher.performence) && teacher.performence.length > 0) {
+          teacher.performence.push(performance);
+        } else {
+          teacher.performence = [performance];
+        }
+  
+        // Save the updated teacher document
+        await teacher.save();
+        console.log("Teacher Performance Updated: ", teacher.performence);
+  
+      } catch (error) {
+        console.error(`Error updating teacher performance for product ${product._id}:`, error);
+      }
+    }
+  }
+  
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Use your email service provider
     host: "smtp.gmail.com",
@@ -96,7 +143,7 @@ module.exports.payment = async (req, res) => {
         user.buyCourses = [...user.buyCourses, ...buyCourses];
         user.cart = [];
         await user.save();
-
+        await updateTeachersPerformance(products, user);
         // Generate receipt content
         const receiptContent = `
             <h1>Receipt</h1>
@@ -120,6 +167,7 @@ module.exports.payment = async (req, res) => {
         return res.status(500).json({ ok: false, message: "Something went wrong" });
     }
 };
+
 
 
 module.exports.getCourses = async (req, res) => {

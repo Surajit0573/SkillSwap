@@ -14,6 +14,45 @@ const options = {
     secure: true,
 }
 
+module.exports.performence = async(req,res)=> {
+    const { id, type } = res.payload;
+    if (type != "instructor") {
+        return res.status(400).json({ ok: false, message: "You are not an instructor" });
+    }
+    try {
+        const user = await User.findById(id).populate('teacher') .populate('performence.course');
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        const performence=user.performence;
+        console.log("User performence : ",performence);
+        const totalStudent=performence.length;
+        let totalIncome=0;
+        performence.map((curr)=>{
+            totalIncome+=(curr.course.price*80)/100;
+        });
+        const aggregatedData = performence.reduce((acc, curr) => {
+            const { month } = curr;
+            const monthData = acc.find(item => item.month === month);
+            
+            if (monthData) {
+              monthData.studentGain++;
+            } else {
+              acc.push({ id: acc.length + 1, month: month, studentGain: 1 });
+            }
+            
+            return acc;
+          }, []);
+          
+        return res.status(200).json({ok: true, message:"Performence has been updated", data: aggregatedData,totalStudent: totalStudent,totalIncome:totalIncome});
+
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ ok: false, message: "Server error" });
+    }
+}
+
 module.exports.isTeacher = async (req, res) => {
     const { id, type, isComplete } = res.payload;
     if (type == "instructor") {
@@ -27,51 +66,51 @@ module.exports.deleteTeacher = async (req, res) => {
     if (type != "instructor") {
         return res.status(400).json({ ok: false, message: "You are not an instructor" });
     }
-    try{
-    const user = await User.findById(id).populate('teacher');
-    if (!user) {
-        console.error("User not found");
-        return res.status(404).json({ ok: false, message: "User not found", data: null });
-    }
-    let courses = user.teacher.courses;
-    //delete reviews 
-    await Review.deleteMany({auther: user._id}).then((r) => {
-        console.log(`Deleted ${r.deletedCount} reviews`);
-    }).catch((err) => {
-        console.error(`Error deleting reviews: ${err}`);
-    });
-    //delete
-    courses.map(async (c) => {
-        await Course.findByIdAndDelete(c).then((c) => {
-            console.log(`Deleted course: ${c&&c.title}`);
+    try {
+        const user = await User.findById(id).populate('teacher');
+        if (!user) {
+            console.error("User not found");
+            return res.status(404).json({ ok: false, message: "User not found", data: null });
+        }
+        let courses = user.teacher.courses;
+        //delete reviews 
+        await Review.deleteMany({ auther: user._id }).then((r) => {
+            console.log(`Deleted ${r.deletedCount} reviews`);
         }).catch((err) => {
-            console.error(`Error deleting course: ${err}`);
+            console.error(`Error deleting reviews: ${err}`);
         });
-    });
-    await Teacher.findByIdAndDelete(user.teacher._id).then((t) => {
-        console.log(`Teacher Deleted`);
-    }).catch((err) => {
-        console.error(`Error deleting Teacher: ${err}`);
-    });
-    user.teacher = null;
-    user.type='learner';
-    await user.save();
-    const payload = {
-        id: user._id,
-        email: user.email,
-        type: user.type,
-        isComplete: user.isComplete,
+        //delete
+        courses.map(async (c) => {
+            await Course.findByIdAndDelete(c).then((c) => {
+                console.log(`Deleted course: ${c && c.title}`);
+            }).catch((err) => {
+                console.error(`Error deleting course: ${err}`);
+            });
+        });
+        await Teacher.findByIdAndDelete(user.teacher._id).then((t) => {
+            console.log(`Teacher Deleted`);
+        }).catch((err) => {
+            console.error(`Error deleting Teacher: ${err}`);
+        });
+        user.teacher = null;
+        user.type = 'learner';
+        await user.save();
+        const payload = {
+            id: user._id,
+            email: user.email,
+            type: user.type,
+            isComplete: user.isComplete,
+        }
+        const token = jwt.sign(payload, jwtSecret, {
+            expiresIn: '24h'
+        });
+        res.clearCookie("token", options);
+        res.cookie("token", token, options);
+        return res.status(400).json({ ok: true, message: "You have been removed as a Instructor" });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ ok: false, message: "Server error" });
     }
-    const token = jwt.sign(payload, jwtSecret, {
-        expiresIn: '24h'
-    });
-    res.clearCookie("token", options);
-    res.cookie("token", token, options);
-    return res.status(400).json({ ok: true, message: "You have been removed as a Instructor" });
-}catch(e){
-    console.error(e);
-    return res.status(500).json({ ok: false, message: "Server error" });
-}
 }
 
 module.exports.info = async (req, res) => {
@@ -90,7 +129,7 @@ module.exports.info = async (req, res) => {
             console.error("User not found");
             return res.status(404).json({ ok: false, message: "User not found", data: null });
         }
-        if(user.teacher){
+        if (user.teacher) {
             user.type = 'instructor';
             await user.save();
             const payload = {

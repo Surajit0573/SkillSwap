@@ -95,10 +95,10 @@ export default function Navbar() {
     <div className='Navbar flex justify-between relative'>
       <div className='flex justify-evenly w-fit items-center'>
         <NavLink to={"/"}> <div className='flex items-center mx-4'>
-          <i className="fa-solid fa-graduation-cap text-5xl "></i>
-          <h1 className='text-3xl'>SkillSwap</h1>
+          <i className="fa-solid fa-graduation-cap text-4xl "></i>
+          <h1 className='text-2xl'>SkillSwap</h1>
         </div></NavLink>
-        <input className='search p-4' type='text' placeholder='Search Hear' />
+        <input className='search p-2' type='text' placeholder='Search Hear' /> <button className='bg-white text-black font-semibold p-2 py-[3px] rounded-md m-2'>Search</button>
       </div>
       <div className='flex justify-evenly w-fit items-center'>
         <NavLink to={'/wishlist'}><i className="fa-solid fa-heart text-red-600 text-4xl mx-2" id='wishlist'></i></NavLink>

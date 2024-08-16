@@ -16,7 +16,7 @@ export default function Cart() {
         async function fetchData() {
             try {
                 const result = await getCart();
-                console.log(result);
+                console.log("Payment Data: ",result);
                 if (result.ok) {
                     setData(result.data);
                     setTotal(result.data.reduce((acc, item) => acc + item.price, 0));

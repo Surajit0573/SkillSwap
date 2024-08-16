@@ -3,6 +3,13 @@ import { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import performenceIcon from "../../assets/performence.png";
+import certificateIcon from "../../assets/certificate.png";
+import coursesIcon from "../../assets/courses.png";
+import deleteAccountIcon from "../../assets/deleteAccount.png";
+import deleteTeacherIcon from "../../assets/deleteTeacher.png";
+import profileIcon from "../../assets/profile.png";
+import resetpasswordIcon from "../../assets/reset-password.png";
 export default function Sidebar() {
   const navigate = useNavigate();
   const { isTeacher } = useContext(AppContext);
@@ -67,18 +74,18 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-80 h-full bg-[#31363F] flex flex-col justify-between">
+    <div className="w-80 h-full bg-[#31363F] flex flex-col justify-between text-left py-4">
       <div className="flex flex-col">
-        <NavLink to={'/dashboard/'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Update Basic Details</div></NavLink>
-        {!isTeach && <NavLink to={'/dashboard/certificate'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Certificates</div></NavLink>}
-        {!isTeach && <NavLink to={'/dashboard/boughtCourses'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">My Courses</div></NavLink>}
-        {isTeach && <NavLink to={'/dashboard/myCourses'}> <div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">My Courses</div></NavLink>}
-        {isTeach && <NavLink> <div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Performance</div></NavLink>}
+        <NavLink to={'/dashboard/'}><div className="p-4 text-2xl hover:bg-blue-500"><div className="flex items-center"><img src={profileIcon} className=" w-10 mr-4"></img>Update Profile</div></div></NavLink>
+        {!isTeach && <NavLink to={'/dashboard/certificate'}><div className="p-4 text-2xl hover:bg-blue-500"><div className="flex items-center"><img src={certificateIcon} className=" w-10 mr-4"></img>Certificates</div></div></NavLink>}
+        {!isTeach && <NavLink to={'/dashboard/boughtCourses'}><div className=" p-4 text-2xl hover:bg-blue-500"><div className="flex items-center"><img src={coursesIcon} className=" w-10 mr-4"></img>My Courses</div></div></NavLink>}
+        {isTeach && <NavLink to={'/dashboard/myCourses'}> <div className="p-4 text-2xl hover:bg-blue-500"><div className="flex items-center"><img src={coursesIcon} className=" w-10 mr-4"></img>My Courses</div></div></NavLink>}
+        {isTeach && <NavLink to={'/dashboard/performence'}> <div className="p-4 text-2xl hover:bg-blue-500"><div className="flex items-center"><img src={performenceIcon} className=" w-10 mr-4"></img>Performance</div></div></NavLink>}
       </div>
       <div>
-        <NavLink to={'/dashboard/account'}><div className="border-solid border-2 p-4 text-2xl hover:bg-blue-500">Change Password</div></NavLink>
-        {isTeach && <div className="border-solid border-2 border-red-600 text-red-600 p-4 text-2xl hover:bg-red-500 hover:text-black" onClick={deleteTeach}>Delete Instructor Account</div>}
-        <div className="border-solid border-2 border-red-600 text-red-600 p-4 text-2xl hover:bg-red-500 hover:text-black" onClick={deleteAccount}>Delete Your Account</div>
+        <NavLink to={'/dashboard/account'}><div className="p-4 text-2xl hover:bg-blue-500"><div className="flex items-center"><img src={resetpasswordIcon} className=" w-10 mr-4"></img>Change Password</div></div></NavLink>
+        {isTeach && <div className=" border-red-600 text-red-600 p-4 text-2xl hover:bg-red-500 hover:text-black" onClick={deleteTeach}><div className="flex items-center"><img src={deleteTeacherIcon} className=" w-10 mr-4"></img>Delete Instructor Account</div></div>}
+        <div className=" border-red-600 text-red-600 p-4 text-2xl hover:bg-red-500 hover:text-black" onClick={deleteAccount}><div className="flex items-center"><img src={deleteAccountIcon} className=" w-10 mr-4"></img>Delete Your Account</div></div>
       </div>
     </div>
   );

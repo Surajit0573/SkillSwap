@@ -51,7 +51,16 @@ const User = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Course'
     }],
-    billingDetails:[{}]
+    performence:[{
+        _id: false ,
+        year: Number,
+        month:String,
+        studentName:String,
+        course:{
+            type: Schema.Types.ObjectId,
+            ref: 'Course'
+        }
+    }]
 
     
 });
