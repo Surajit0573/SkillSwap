@@ -106,7 +106,7 @@ export default function Performence() {
         fetchData();
     }, []);
     return (
-        <div>
+        <div className="bg-gray-900">
             <Navbar />
             <div className="h-[90vh] flex justify-between">
                 <div>

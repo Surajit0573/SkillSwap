@@ -3,7 +3,7 @@ import LessonCard from './LessonCard';
 
 export default function Lesson({ data, id, isOwner }) {
     return (
-        <div className="lessons bg-gray-900 p-6 rounded-lg shadow-md">
+        <div className="lessons bg-gray-800 p-6 rounded-lg shadow-md">
             <div className="title mb-6 text-center">
                 <h2 className='text-3xl font-bold mb-2 text-white'>Comprehensive Course Modules</h2>
                 <p className='text-lg text-gray-400 mb-4'>Immerse yourself in a wealth of knowledge with our comprehensive course content.</p>

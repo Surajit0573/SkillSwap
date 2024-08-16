@@ -59,14 +59,15 @@ export default function Details() {
     }, [location]);
 
     return (
-        <>
+        <div className="bg-gray-900">
             <Navbar />
+           
             <CourseDetails data={data} />
             <Lessons data={data&&data.sections} id={data&&data._id} isOwner={isOwner}/>
             <About data={data}/>
             <Teacher data={data&&data.teacher}/>
             <Reviews data={data}/>
             <Related />
-        </>
+            </div>
     )
 }

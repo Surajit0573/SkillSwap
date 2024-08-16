@@ -166,7 +166,7 @@ export default function CourseDetails({ data }) {
                     <p className='text-xl my-4 text-gray-400'>Created by {data && data.teacherName}, {data && data.teacher.teacher.qualifications}</p>
                     <p className='text-lg text-gray-400'>{data && data.tags.map((t, index) => <span key={index} className="mr-2">#{t}</span>)}</p>
                 </div>
-                <div className='bg-gray-700 p-6 rounded-md text-left flex flex-col'>
+                <div className='bg-gray-700 p-6 rounded-md text-left flex flex-col w-fit'>
                     <img className='w-full md:w-96 rounded-md hover:shadow-lg transition-all duration-200' src={data && data.thumbnail} alt="Course Thumbnail" />
                     <p className='text-3xl my-4 text-white'><i className="fa-solid fa-indian-rupee-sign"></i> {data && data.price}</p>
                     <div className='flex items-center'>

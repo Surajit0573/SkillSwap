@@ -1,10 +1,11 @@
 import Navbar from "./Navbar";
 import Body from './Home/Body';
-export default function Home(){
+
+export default function Home() {
     return (
-        <>
-            <Navbar/>
-            <Body/>
-        </>
-    )
+        <div className="bg-gray-900 text-gray-100 min-h-screen">
+            <Navbar />
+            <Body />
+        </div>
+    );
 }

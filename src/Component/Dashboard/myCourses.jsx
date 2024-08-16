@@ -1,13 +1,15 @@
 import Navbar from "../Navbar";
 import Sidebar from "./sidebar";
-import {useState,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Card from "../Home/Card";
-import { NavLink,useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 export default function MyCourses() {
     const navigate = useNavigate();
     const [data, setData] = useState(null);
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -20,41 +22,39 @@ export default function MyCourses() {
                     withCredentials: true,
                 });
                 const result = await response.json();
-                console.log(result.data);
                 if (result.ok) {
                     setData(result.data);
-                    return;
                 } else {
                     toast.error(result.message);
-                    console.error(result.message);
                     if (result.redirect) {
                         navigate(result.redirect);
-                        return;
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
-                return;
             }
         }
 
         fetchData();
     }, []);
-    return (
-        <div>
-            <Navbar />
-            <div className="h-[90vh] flex justify-between">
-            <div>
-                <Sidebar />
-                </div>
-                <div className="overflow-y-scroll flex-grow p-8">
 
-                <NavLink to={'/addCourse'}><button className="bg-blue-600 p-4 rounded-md text-xl">Add New Course</button></NavLink>
-                <div className="flex">
-                {data&&data.map((d)=><Card data={d}/>)}  
-                </div>      
+    return (
+        <div className="bg-gray-900 text-white min-h-screen">
+            <Navbar />
+            <div className="h-[90vh] flex">
+                <Sidebar />
+                <div className="overflow-y-scroll flex-grow p-8">
+                    <NavLink to={'/addCourse'}>
+                        <button className="bg-blue-600 hover:bg-blue-700 transition-colors p-4 rounded-md text-xl mb-6">
+                            Add New Course
+                        </button>
+                    </NavLink>
+                    <div className="flex flex-wrap gap-6">
+                        {data && data.map((d) => (
+                            <Card key={d._id} data={d} />
+                        ))}
+                    </div>
                 </div>
-              
             </div>
         </div>
     );

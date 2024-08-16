@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import '../style/SignUp.css';
 import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Margin } from '@mui/icons-material';
+
 export default function BecomeTeach() {
   const [name, setName] = useState('');
   const navigate = useNavigate();
@@ -24,28 +25,24 @@ export default function BecomeTeach() {
           withCredentials: true,
         });
         const result = await response.json();
-        console.log(result);
         if (!result.ok) {
           toast.error(result.message);
           if (result.redirect) {
-            console.log(result.message);
             navigate(result.redirect);
             return;
           }
         } else {
           setName(result.data.fullname);
         }
-
       } catch (e) {
         console.error(e);
-       toast.error('Something went wrong');
+        toast.error('Something went wrong');
       }
     }
     fetchData();
   }, []);
 
-  const styles =
-  {
+  const styles = {
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
         borderColor: 'white',
@@ -66,7 +63,8 @@ export default function BecomeTeach() {
     '& .MuiInputLabel-root.Mui-focused': {
       color: 'white',
     },
-  }
+    marginBottom: '16px',
+  };
 
   const [formData, setFormData] = useState({
     domain: '',
@@ -78,10 +76,9 @@ export default function BecomeTeach() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,43 +97,74 @@ export default function BecomeTeach() {
       if (!result.ok) {
         toast.error(result.message);
         if (result.redirect) {
-          console.log(result.message);
           navigate(result.redirect);
           return;
         } else {
           navigate(-1);
           return;
         }
-      }else{
+      } else {
         toast.success(result.message);
-        console.log(result.message);
         navigate('/profile');
       }
     } catch (error) {
-      toast.success('something went wrong');
+      toast.error('Something went wrong');
       console.error('Error:', error);
     }
   };
 
-
   return (
-
     <>
       <Navbar />
-      <div className="signup">
-        <form onSubmit={handleSubmit}>
-          <div className="signup-form">
-            <h1 className='text-2xl'>Come teach with us {name}</h1>
-            <p className='text-2xl m-4' >Become an instructor and change lives — including your own</p>
-            <TextField id="outlined-basic" label="Domain" name='domain' value={formData.domain} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
-            <TextField id="outlined-basic" label="Qualifications" name='qualifications' value={formData.qualifications} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
-            <TextField id="outlined-basic" label="Year of Experience" name='yoe' value={formData.yoe} onChange={handleChange} variant="outlined" sx={styles} className='inputtext' />
-            <Button type='submit' variant="contained" size="medium">Become a Teacher</Button>
-          </div>
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
+        <form onSubmit={handleSubmit} className="w-full max-w-lg bg-gray-800 p-8 rounded-md shadow-md">
+          <h1 className="text-3xl mb-6 text-center">Come Teach with Us, {name}</h1>
+          <p className="text-xl mb-6 text-center">Become an instructor and change lives — including your own</p>
+          <TextField 
+            id="outlined-basic" 
+            label="Domain" 
+            name="domain" 
+            value={formData.domain} 
+            onChange={handleChange} 
+            variant="outlined" 
+            sx={styles} 
+            fullWidth 
+            className="mb-4"
+          />
+          <TextField 
+            id="outlined-basic" 
+            label="Qualifications" 
+            name="qualifications" 
+            value={formData.qualifications} 
+            onChange={handleChange} 
+            variant="outlined" 
+            sx={styles} 
+            fullWidth 
+            className="mb-4"
+          />
+          <TextField 
+            id="outlined-basic" 
+            label="Year of Experience" 
+            name="yoe" 
+            value={formData.yoe} 
+            onChange={handleChange} 
+            variant="outlined" 
+            sx={styles} 
+            fullWidth 
+            className="mb-6"
+          />
+          <Button 
+            type="submit" 
+            variant="contained" 
+            size="large" 
+            fullWidth 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Become a Teacher
+          </Button>
         </form>
-
-
+        <ToastContainer />
       </div>
     </>
-  )
+  );
 }

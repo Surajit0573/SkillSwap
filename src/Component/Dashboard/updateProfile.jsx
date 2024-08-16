@@ -3,12 +3,12 @@ import { useState, useContext, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import '../../style/AddCourse.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -20,6 +20,7 @@ const VisuallyHiddenInput = styled('input')({
     whiteSpace: 'nowrap',
     width: 1,
 });
+
 export default function UpdateProfile() {
     const navigate = useNavigate();
     const [heading, setHeading] = useState("Complete Your Profile");
@@ -47,11 +48,10 @@ export default function UpdateProfile() {
             });
             const result = await response.json();
             if (result.ok) {
-                console.log(result);
                 setProfile({
                     fullname: result.data.fullname,
                     about: result.data.about
-                })
+                });
                 setLinks({
                     website: result.data.links.website,
                     linkedin: result.data.links.linkedin,
@@ -61,7 +61,6 @@ export default function UpdateProfile() {
                 setUrl(result.data.dp);
                 setHeading("Update Your Profile");
             } else {
-                console.log(result.message);
                 toast.error(result.message);
                 if (result.redirect) {
                     navigate(result.redirect);
@@ -69,16 +68,15 @@ export default function UpdateProfile() {
             }
         }
         fetchData();
-    }, [])
+    }, []);
 
-    const styles =
-    {
+    const styles = {
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderColor: 'white',
+                borderColor: 'gray',
             },
             '&:hover fieldset': {
-                borderColor: 'white',
+                borderColor: 'lightgray',
             },
             '&.Mui-focused fieldset': {
                 borderColor: 'white',
@@ -98,12 +96,11 @@ export default function UpdateProfile() {
             color: 'white',
         },
         width: '70%',
-    }
+    };
 
     useEffect(() => {
         async function update() {
             const currUrl = await getUrl(file);
-            console.log(currUrl);
             setUrl(currUrl);
         }
         if (file != null) {
@@ -122,8 +119,7 @@ export default function UpdateProfile() {
     }
 
     function deleteSkill(e) {
-        console.log(e.target.getAttribute('name'));
-        setSkills(skills.filter((t) => t != e.target.getAttribute('name')));
+        setSkills(skills.filter((t) => t !== e.target.getAttribute('name')));
     }
 
     function handleChange(e) {
@@ -136,14 +132,12 @@ export default function UpdateProfile() {
 
     async function handleFileChange(e) {
         setFile(e.target.files[0]);
-        console.log(url);
         deleteFile(url);
     }
+
     async function handleSubmit(e) {
         e.preventDefault();
-        // console.log( profile, links, skills,url);
         try {
-            // Send the POST request with the file
             const response = await fetch('http://localhost:3000/api/user/profile/', {
                 method: 'POST',
                 headers: {
@@ -154,55 +148,59 @@ export default function UpdateProfile() {
                 body: JSON.stringify({ fullname: profile.fullname, about: profile.about, links, skills, dp: url })
             });
             const result = await response.json();
-            console.log(result);
             if (result.ok) {
-                console.log(result.message);
                 navigate('/profile');
             } else {
-                console.log(result.message);
                 toast.error(result.message);
                 if (result.redirect) {
                     navigate(result.redirect);
                 }
             }
         } catch (error) {
-            console.error('Error uploading file:', error);
             toast.error('Failed to update profile, try again later.');
         }
     }
+
     return (
         <>
-            <div className="addCourse">
+            <div className="addCourse bg-gray-900 text-white p-8">
                 <h1 className="text-3xl m-4">{heading}</h1>
                 <div className="addCourseForm">
-                    <div className='upload w-[535px]'>
-                        <img src={url}></img>
+                    <div className='upload w-80 flex justify-center mb-6'>
+                        <img src={url} className="rounded-full object-cover" alt="Profile" />
                         <Button
                             component="label"
-                            role={undefined}
                             variant="contained"
-                            tabIndex={-1}
                             startIcon={<CloudUploadIcon />}
                             name="dp"
                             onChange={handleFileChange}
+                            sx={{ marginLeft: '20px', backgroundColor: 'gray' }}
                         >
                             Upload Profile Picture
-
                             <VisuallyHiddenInput type="file" />
                         </Button>
                     </div>
                     <TextField id="outlined-basic" name="fullname" value={profile.fullname} onChange={handleChange} label='Full Name' variant="outlined" sx={styles} className='inputtext' required />
                     <TextField id="outlined-multiline-static" name="about" value={profile.about} onChange={handleChange} label="Write something about you" multiline rows={3} sx={styles} className='inputtext' required />
                     <TextField id="outlined-basic" name="skills" value={skill} onChange={(e) => setSkill(e.target.value)} onKeyDown={addSkill} label='Add Skills' variant="outlined" sx={styles} className='inputtext' />
-                    <div className="showTags">
-                        {skills.map((t, index) => (<div key={index} className="oneTag">{t}<button name={t} onClick={deleteSkill}><i name={t} className="fa-solid fa-xmark flex self-center"></i></button></div>))}
+                    <div className="showTags flex flex-wrap mt-4">
+                        {skills.map((t, index) => (
+                            <div key={index} className="oneTag bg-gray-800 text-white px-3 py-1 rounded-full flex items-center mr-2 mb-2">
+                                {t}
+                                <button name={t} onClick={deleteSkill} className="ml-2">
+                                    <i name={t} className="fa-solid fa-xmark flex self-center"></i>
+                                </button>
+                            </div>
+                        ))}
                     </div>
-                    <TextField id="outlined-basic" name="website" value={links.website} onChange={handleLinkChange} label='Website Link' variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="twitter" value={links.twitter} onChange={handleLinkChange} label='Twitter Link' variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="linkedin" value={links.linkedin} onChange={handleLinkChange} label='Linkedin Link' variant="outlined" sx={styles} className='inputtext' required />
-                    <Button type='submit' onClick={handleSubmit} disabled={!((url != '') && (skills.length > 0))} variant="contained" size="medium">SAVE</Button>
+                    <TextField id="outlined-basic" name="website" value={links.website} onChange={handleLinkChange} label='Website Link' variant="outlined" sx={styles} className='inputtext' />
+                    <TextField id="outlined-basic" name="twitter" value={links.twitter} onChange={handleLinkChange} label='Twitter Link' variant="outlined" sx={styles} className='inputtext' />
+                    <TextField id="outlined-basic" name="linkedin" value={links.linkedin} onChange={handleLinkChange} label='LinkedIn Link' variant="outlined" sx={styles} className='inputtext' />
+                    <Button type='submit' onClick={handleSubmit} disabled={!((url !== '') && (skills.length > 0))} variant="contained" size="medium" sx={{ backgroundColor: '#1f2937', marginTop: '20px' }}>
+                        SAVE
+                    </Button>
                 </div>
             </div>
         </>
-    )
+    );
 }
