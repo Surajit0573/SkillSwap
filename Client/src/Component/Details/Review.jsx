@@ -11,7 +11,7 @@ export default function Review({ id, courseId }) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/api/review/${id}`, {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/review/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export default function Review({ id, courseId }) {
 
     async function deleteReview() {
         try {
-            const response = await fetch(`http://localhost:3000/api/review/${courseId}/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/review/${courseId}/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

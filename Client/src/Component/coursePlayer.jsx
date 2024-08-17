@@ -68,7 +68,7 @@ export default function CoursePlayer() {
     const { id } = state;
     console.log(id);
     async function fetchData() {
-      const responce = await fetch(`http://localhost:3000/api/courses/${id}`, {
+      const responce = await fetch(`${import.meta.env.VITE_URL}/api/courses/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

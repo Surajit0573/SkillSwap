@@ -14,7 +14,7 @@ export default function Card({ data }) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/api/courses/isLike`, {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/courses/isLike`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ export default function MyCourses() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('http://localhost:3000/api/user/myCourses', {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/user/myCourses`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ const review=require("./routes/reviews.js");
 const app = express();
 app.use(cors({
   credentials: true,
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_URL,
 }));
 let port = 3000;
 var methodOverride = require('method-override')

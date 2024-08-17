@@ -21,7 +21,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true); // Add a loading state
 
     useEffect(() => {
-        const url = (username && username.length > 0) ? `http://localhost:3000/api/user/profile/${username}` : 'http://localhost:3000/api/user/profile/dashboard';
+        const url = (username && username.length > 0) ? `${import.meta.env.VITE_URL}/api/user/profile/${username}` : `${import.meta.env.VITE_URL}/api/user/profile/dashboard`;
         
         async function fetchData() {
             setLoading(true); // Set loading to true before fetching data

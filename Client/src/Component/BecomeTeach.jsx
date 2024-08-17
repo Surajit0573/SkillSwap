@@ -16,7 +16,7 @@ export default function BecomeTeach() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('http://localhost:3000/api/user/teacher/info', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/teacher/info`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export default function BecomeTeach() {
     e.preventDefault();
     formData.yoe = Number(formData.yoe);
     try {
-      const response = await fetch('http://localhost:3000/api/user/teacher/signup', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/user/teacher/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

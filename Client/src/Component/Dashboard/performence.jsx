@@ -56,7 +56,7 @@ export default function Performence() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('http://localhost:3000/api/user/teacher/performence', {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/user/teacher/performence`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

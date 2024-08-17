@@ -82,7 +82,7 @@ export default function AddLesson() {
         try {
             // Send the POST request with the file
             console.log(Section);
-            const response = await fetch(`http://localhost:3000/api/courses/${id}/addLessons`,{
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/courses/${id}/addLessons`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

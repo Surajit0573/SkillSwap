@@ -69,7 +69,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/user/verifyEmail', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/user/verifyEmail`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

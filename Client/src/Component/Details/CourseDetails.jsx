@@ -42,7 +42,7 @@ export default function CourseDetails({ data }) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/api/courses/isLike`, {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/courses/isLike`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export default function CourseDetails({ data }) {
 
     async function addToCart() {
         try {
-            const response = await fetch(`http://localhost:3000/api/user/cart`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/user/cart`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export default function CourseDetails({ data }) {
 
     async function handleLike() {
         try {
-            const response = await fetch(`http://localhost:3000/api/courses/like`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/courses/like`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

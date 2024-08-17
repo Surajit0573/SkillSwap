@@ -4,7 +4,7 @@ export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
     async function isLoggedin() {
-        const response = await fetch('http://localhost:3000/api/user/', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export default function AppContextProvider({ children }) {
     }
 
     async function isTeacher() {
-        const response = await fetch('http://localhost:3000/api/user/teacher', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/teacher`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export default function AppContextProvider({ children }) {
     }
 
     async function getEmail() {
-        const response = await fetch('http://localhost:3000/api/user/getEmail', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/getEmail`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function AppContextProvider({ children }) {
             return null;
         }
         const type = getFileType(file.type);
-        const API = type == "video" ? 'http://localhost:3000/api/upload/video' : 'http://localhost:3000/api/upload/';
+        const API = type == "video" ? `${import.meta.env.VITE_URL}/api/upload/video` : `${import.meta.env.VITE_URL}/api/upload/`;
         try {
             // Send the POST request with the file
             const response = await axios.post(API, { file }, {
@@ -85,7 +85,7 @@ export default function AppContextProvider({ children }) {
             console.log("Details: ", url, urlSegments, lastTwoSegments, publicId, type);
             try {
                 // Send the POST request with the file
-                const response = await axios.post('http://localhost:3000/api/upload/delete', { publicId, type });
+                const response = await axios.post(`${import.meta.env.VITE_URL}/api/upload/delete`, { publicId, type });
                 console.log(response);
 
             } catch (error) {
@@ -96,7 +96,7 @@ export default function AppContextProvider({ children }) {
 
     async function getCart(){
         try {
-            const response = await fetch(`http://localhost:3000/api/user/cart`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/user/cart`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export default function AppContextProvider({ children }) {
 
     async function deleteCart(data){
         try {
-            const response = await fetch(`http://localhost:3000/api/user/cart`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/user/cart`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

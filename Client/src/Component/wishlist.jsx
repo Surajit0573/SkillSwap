@@ -10,7 +10,7 @@ export default function Body() {
     useEffect(() => {
         async function fetchdata() {
             try{
-            const response = await fetch('http://localhost:3000/api/courses/like', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/courses/like`, {
                 credentials: 'include',
                 withCredentials: true,
               });

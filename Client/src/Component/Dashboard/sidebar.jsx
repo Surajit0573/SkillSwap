@@ -43,7 +43,7 @@ export default function Sidebar() {
   const deleteTeach = useCallback(async () => {
     if (window.confirm('Are you sure you want to delete your teacher account?')) {
       try {
-        const response = await fetch('http://localhost:3000/api/user/teacher/', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/teacher/`, {
           method: 'DELETE',
           credentials: "include",
         });
@@ -69,7 +69,7 @@ export default function Sidebar() {
   const deleteAccount = useCallback(async () => {
     if (window.confirm('Are you sure you want to delete your account?')) {
       try {
-        const response = await fetch('http://localhost:3000/api/user/', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/`, {
           method: 'DELETE',
           credentials: "include",
         });

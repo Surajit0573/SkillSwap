@@ -35,7 +35,7 @@ export default function Cart() {
 
     const makePayment = async (token) => {
         try {
-            const response = await fetch('http://localhost:3000/api/user/payment', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/user/payment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

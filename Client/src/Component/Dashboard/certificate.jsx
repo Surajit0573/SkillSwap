@@ -59,7 +59,7 @@ export default function Certificate() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('http://localhost:3000/api/user/profile/certificate', {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/user/profile/certificate`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function Certificate() {
 
     async function handleSubmit() {
         try {
-            const response = await fetch('http://localhost:3000/api/user/profile/certificate', {
+            const response = await fetch(  `${import.meta.env.VITE_URL}/api/user/profile/certificate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

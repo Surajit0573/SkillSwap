@@ -20,7 +20,7 @@ export default function Navbar() {
       const curr = await isLoggedin();
       setIsLog(curr);
       if (curr) {
-        const response = await fetch('http://localhost:3000/api/user/getInfo', {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/user/getInfo`, {
           credentials: 'include',
           withCredentials: true,
         });
@@ -38,7 +38,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/logout', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/user/logout`, {
         credentials: "include",
         withCredentials: true,
       });
@@ -56,7 +56,7 @@ export default function Navbar() {
 
   async function handleClick() {
     try {
-      const response = await fetch('http://localhost:3000/api/user/signOutTeach', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/user/signOutTeach`, {
         credentials: 'include',
         withCredentials: true,
       });

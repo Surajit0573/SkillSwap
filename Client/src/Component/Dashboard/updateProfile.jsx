@@ -41,7 +41,7 @@ export default function UpdateProfile() {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await fetch('http://localhost:3000/api/user/profile', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/user/profile`, {
                 method: 'GET',
                 credentials: "include",
                 withCredentials: true,
@@ -138,7 +138,7 @@ export default function UpdateProfile() {
     async function handleSubmit(e) {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3000/api/user/profile/', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/user/profile/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

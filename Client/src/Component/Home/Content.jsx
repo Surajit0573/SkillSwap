@@ -14,9 +14,9 @@ export default function Content() {
         async function fetchData() {
             try {
                 catId = location.state?.catId;
-                let url = "http://localhost:3000/api/courses";
+                let url = `${import.meta.env.VITE_URL}/api/courses`;
                 if (catId && catId.length > 0) {
-                    url = `http://localhost:3000/api/courses/category/${catId}`;
+                    url = `${import.meta.env.VITE_URL}/api/courses/category/${catId}`;
                     setHeader(`Courses in ${catId}`);
                 } else {
                     setHeader("All Online Classes");

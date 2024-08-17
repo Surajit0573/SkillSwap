@@ -21,7 +21,7 @@ export default function Reviews({ data }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/review/${data?._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/review/${data?._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
