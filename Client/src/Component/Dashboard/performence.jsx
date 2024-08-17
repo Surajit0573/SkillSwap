@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
+import Footer from "../footer";
 
 
 export default function Performence() {
@@ -166,6 +167,7 @@ export default function Performence() {
                 </div>
 
             </div>
+            <Footer/>
         </div>
     );
 }

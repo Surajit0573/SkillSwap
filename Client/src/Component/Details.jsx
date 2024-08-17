@@ -10,6 +10,7 @@ import '../style/Details.css'
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from "./footer";
 export default function Details() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -68,6 +69,7 @@ export default function Details() {
             <Teacher data={data&&data.teacher}/>
             <Reviews data={data}/>
             <Related />
+            <Footer/>
             </div>
     )
 }

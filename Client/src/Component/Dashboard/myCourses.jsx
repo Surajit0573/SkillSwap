@@ -5,6 +5,7 @@ import Card from "../Home/Card";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from "../footer";
 
 export default function MyCourses() {
     const navigate = useNavigate();
@@ -56,6 +57,7 @@ export default function MyCourses() {
                     </div>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }

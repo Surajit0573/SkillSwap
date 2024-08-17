@@ -8,6 +8,7 @@ import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from './footer';
 export default function SignUp() {
   const { isLoggedin } = useContext(AppContext);
   const navigate = useNavigate();
@@ -112,6 +113,7 @@ export default function SignUp() {
 
 
       </div>
+      <Footer/>
     </>
   )
 }

@@ -8,6 +8,7 @@ import Navbar from './Navbar';
 import { AppContext } from "../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from './footer';
 export default function Login() {
   const location = useLocation();
   const { getEmail } = useContext(AppContext);
@@ -121,6 +122,7 @@ export default function Login() {
           </div>
         </form>
       </div>
+      <Footer/>
     </>
   )
 }

@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../AppContext';
 import StripeCheckout from 'react-stripe-checkout';
+import Footer from './footer';
 
 export default function Cart() {
     const navigate = useNavigate();
@@ -98,7 +99,8 @@ export default function Cart() {
                     </StripeCheckout>
                 </div>
             </div>
-            <ToastContainer />
+           <Footer/>
+
         </>
     );
 }

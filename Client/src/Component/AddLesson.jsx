@@ -11,6 +11,7 @@ import { useNavigate,useLocation } from "react-router-dom";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from "./footer";
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -129,6 +130,7 @@ export default function AddLesson() {
                     <Button variant="contained" onClick={handleCreate} size="medium">Create</Button>
                 </div>
             </div>
+            <Footer/>
         </>
     )
 }

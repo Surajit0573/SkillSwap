@@ -88,7 +88,6 @@ export default function Profile() {
                     <TeacherProfile options={data} />
                 )
             )}
-            <ToastContainer />
         </>
     );
 }

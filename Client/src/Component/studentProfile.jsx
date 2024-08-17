@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 import { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import Button from '@mui/material/Button';
-
+import Footer from "./footer";
 export default function StudentProfile({ options }) {
     const [data, setData] = useState(options);
 
@@ -59,6 +59,7 @@ export default function StudentProfile({ options }) {
                     {/* Add certificate display logic here */}
                 </div>
             </div>
+            <Footer/>
         </>
     );
 }

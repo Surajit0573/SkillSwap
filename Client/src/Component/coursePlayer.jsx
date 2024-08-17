@@ -9,6 +9,7 @@ import VideoPlayer from "./videoPlayer.jsx";
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import Footer from "./footer.jsx";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -158,6 +159,7 @@ export default function CoursePlayer() {
           </div>}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 

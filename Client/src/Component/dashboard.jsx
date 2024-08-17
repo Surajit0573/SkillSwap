@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from "./footer.jsx";
 export default function DashBoard() {
     const navigate = useNavigate();
     const { isLoggedin } = useContext(AppContext);
@@ -31,6 +32,7 @@ export default function DashBoard() {
                 </div>
 
             </div>
+            <Footer/>
         </div>
     );
 }

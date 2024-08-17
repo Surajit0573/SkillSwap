@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import * as React from 'react';
 import { useState } from 'react';
+import Footer from "./footer";
 
 export default function BasicProfile({ options }) {
     const [data, setData] = useState(options);
@@ -31,6 +32,7 @@ export default function BasicProfile({ options }) {
                     </h2>
                 </div>
             </div>
+            <Footer />  
         </>
     );
 }

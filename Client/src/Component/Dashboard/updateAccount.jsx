@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from "../footer";
 
 export default function DashBoard() {
     const navigate = useNavigate();
@@ -152,6 +153,7 @@ export default function DashBoard() {
                     </div>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }

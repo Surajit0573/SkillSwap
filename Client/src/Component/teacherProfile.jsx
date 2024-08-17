@@ -4,6 +4,7 @@ import Rating from '@mui/material/Rating';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from "./Home/Card";
+import Footer from "./footer";
 
 export default function TeacherProfile({ options }) {
     const [data, setData] = useState(options);
@@ -52,6 +53,7 @@ export default function TeacherProfile({ options }) {
                     {data && data.teacher.courses.map((d) => (<Card key={d._id} data={d} />))}
                 </div>
             </div>
+            <Footer/>
         </>
     );
 }

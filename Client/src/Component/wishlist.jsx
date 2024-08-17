@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from './footer';
 export default function Body() {
     const navigate = useNavigate();
     let [data,setdata]=useState();
@@ -43,6 +44,7 @@ export default function Body() {
             <div className="content ">
                 {data && data.map((d, index) => (<Card key={index} data={d} />))}
             </div>
+            <Footer/>
         </>
     )
 }
