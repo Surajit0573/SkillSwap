@@ -2,6 +2,13 @@ import Card from './Card';
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GridLoader from "react-spinners/GridLoader";
+
+const override = {
+    display: "block",
+    margin: "20% auto",
+    borderColor: "red",
+};
+
 export default function Content() {
     const [header, setHeader] = useState("All Online Classes");
     const location = useLocation();
@@ -52,7 +59,7 @@ export default function Content() {
             />
         );
     }
-    
+
     return (
         <div className="flex flex-col text-left h-[70vh] w-[80vw] overflow-y-scroll bg-gray-900 text-gray-100 p-4 rounded-md shadow-md">
             <p className="font-semibold text-3xl mb-4">{header}</p>
