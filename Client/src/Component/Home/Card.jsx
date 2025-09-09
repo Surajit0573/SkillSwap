@@ -2,6 +2,7 @@ import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { Users, Clock, Star, IndianRupee, Heart } from 'lucide-react';
 
 export default function Card({ data }) {
     const [isLiked, setIsLiked] = useState(false);
@@ -40,31 +41,63 @@ export default function Card({ data }) {
     }, [data]);
 
     return (
-        <div className="bg-gray-800 text-gray-100 rounded-lg shadow-lg overflow-hidden cursor-pointer" onClick={clickHandler}>
-            <img src={data?.thumbnail} alt="" className="w-full h-48 object-cover"/>
-            <div className="p-4">
-                <div className="flex justify-between text-sm mb-2">
-                    <p>{data?.enrolledUsers.length} Students</p>
-                    <p>3h 50m</p>
-                </div>
-                <h4 className="text-lg font-semibold mb-2">{data?.title}</h4>
-                <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-lg flex items-center">
-                        {data?.rating}
-                        <Rating name="half-rating-read" defaultValue={data?.rating} precision={0.1} readOnly className="ml-1"/>
-                        ({data?.reviews.length})
-                    </h3>
-                    <p className="text-lg font-semibold">
-                        <i className="fa-solid fa-indian-rupee-sign"></i> {data?.price}
-                    </p>
-                </div>
-                <div className="flex justify-between items-center">
-                    <p className="text-md">{data?.teacherName}</p>
+        <div className="group bg-gradient-to-br from-slate-800 to-slate-900 text-gray-100 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-105 border border-slate-700/50" 
+             onClick={clickHandler}>
+            {/* Image Container */}
+            <div className="relative overflow-hidden">
+                <img 
+                    src={data?.thumbnail} 
+                    alt={data?.title || "Course thumbnail"} 
+                    className="w-full h-40 sm:h-36 md:h-32 lg:h-36 object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute top-2 right-2">
                     {isLiked ? (
-                        <i className="fa-solid fa-heart text-red-600 text-xl"></i>
+                        <Heart className="w-5 h-5 text-red-500 fill-current" />
                     ) : (
-                        <i className="fa-regular fa-heart text-xl"></i>
+                        <Heart className="w-5 h-5 text-white/70 hover:text-red-500 transition-colors" />
                     )}
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-4 space-y-3">
+                {/* Stats Row */}
+                <div className="flex justify-between items-center text-xs text-gray-400">
+                    <div className="flex items-center gap-1">
+                        <Users className="w-3 h-3" />
+                        <span>{data?.enrolledUsers.length || 0} Students</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>3h 50m</span>
+                    </div>
+                </div>
+
+                {/* Title */}
+                <h4 className="text-sm font-semibold line-clamp-2 group-hover:text-blue-300 transition-colors leading-tight">
+                    {data?.title}
+                </h4>
+
+                {/* Rating and Price Row */}
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium">{data?.rating || 0}</span>
+                        <span className="text-xs text-gray-400">({data?.reviews?.length || 0})</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <IndianRupee className="w-4 h-4 text-green-400" />
+                        <span className="text-sm font-semibold text-green-400">
+                            {data?.price || 'Free'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Teacher Name */}
+                <div className="pt-2 border-t border-slate-700/50">
+                    <p className="text-xs text-gray-400 truncate">
+                        By {data?.teacherName || 'Unknown Instructor'}
+                    </p>
                 </div>
             </div>
         </div>
