@@ -1,16 +1,59 @@
+// Profile.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import GridLoader from "react-spinners/GridLoader";
 import StudentProfile from './studentProfile';
 import TeacherProfile from './teacherProfile';
 import BasicProfile from './basicProfile';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const override = {
-    display: "block",
-    margin: "20% auto",
-    borderColor: "red",
+// Skeleton Loading Component
+const ProfileSkeleton = () => {
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+            <div className="animate-pulse">
+                {/* Navbar Skeleton */}
+                <div className="h-16 bg-gray-800/50 backdrop-blur-sm border-b border-gray-700/50"></div>
+                
+                {/* Main Content Skeleton */}
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex flex-col lg:flex-row gap-8">
+                        {/* Profile Image Skeleton */}
+                        <div className="flex-shrink-0">
+                            <div className="w-64 h-64 bg-gray-700/50 rounded-2xl mx-auto lg:mx-0"></div>
+                            <div className="mt-6 space-y-3">
+                                <div className="h-12 bg-gray-700/50 rounded-lg"></div>
+                                <div className="h-12 bg-gray-700/50 rounded-lg"></div>
+                                <div className="h-12 bg-gray-700/50 rounded-lg"></div>
+                            </div>
+                        </div>
+                        
+                        {/* Profile Details Skeleton */}
+                        <div className="flex-1 space-y-6">
+                            <div className="h-6 bg-gray-700/50 rounded w-24"></div>
+                            <div className="h-12 bg-gray-700/50 rounded w-3/4"></div>
+                            <div className="h-6 bg-gray-700/50 rounded w-48"></div>
+                            <div className="space-y-3">
+                                <div className="h-4 bg-gray-700/50 rounded"></div>
+                                <div className="h-4 bg-gray-700/50 rounded w-5/6"></div>
+                                <div className="h-4 bg-gray-700/50 rounded w-4/6"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Additional Content Skeleton */}
+                    <div className="mt-16">
+                        <div className="h-8 bg-gray-700/50 rounded w-64 mb-6"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[...Array(6)].map((_, i) => (
+                                <div key={i} className="h-48 bg-gray-700/50 rounded-xl"></div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default function Profile() {
@@ -18,13 +61,15 @@ export default function Profile() {
     const location = useLocation();
     const navigate = useNavigate();
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true); // Add a loading state
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const url = (username && username.length > 0) ? `${import.meta.env.VITE_URL}/api/user/profile/${username}` : `${import.meta.env.VITE_URL}/api/user/profile/dashboard`;
+        const url = (username && username.length > 0) 
+            ? `${import.meta.env.VITE_URL}/api/user/profile/${username}` 
+            : `${import.meta.env.VITE_URL}/api/user/profile/dashboard`;
         
         async function fetchData() {
-            setLoading(true); // Set loading to true before fetching data
+            setLoading(true);
             try {
                 const response = await fetch(url, {
                     method: 'GET',
@@ -50,7 +95,7 @@ export default function Profile() {
                 toast.error('An error occurred while fetching data');
                 navigate('/');
             } finally {
-                setLoading(false); // Set loading to false after fetching data
+                setLoading(false);
             }
         }
 
@@ -58,29 +103,13 @@ export default function Profile() {
     }, [username, location.pathname]);
 
     if (loading) {
-        return (
-            <GridLoader
-                color={'#0059ef'}
-                loading={true}
-                cssOverride={override}
-                size={30}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-            />
-        );
+        return <ProfileSkeleton />;
     }
 
     return (
         <>
             {!data ? (
-                <GridLoader
-                    color={'#0059ef'}
-                    loading={true}
-                    cssOverride={override}
-                    size={30}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                />
+                <ProfileSkeleton />
             ) : (
                 data.type === "learner" ? (
                     data.isComplete ? <StudentProfile options={data} /> : <BasicProfile options={data} />
@@ -88,6 +117,18 @@ export default function Profile() {
                     <TeacherProfile options={data} />
                 )
             )}
+            <ToastContainer 
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </>
     );
 }
