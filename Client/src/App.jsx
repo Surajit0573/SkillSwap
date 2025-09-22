@@ -1,6 +1,7 @@
-import React,{Suspense} from 'react';
+import React, { Suspense } from 'react';
 import './style/App.css';
 import { Routes, Route } from 'react-router-dom';
+import EnhancedLoading from './EnhancedLoading'; 
 
 // Lazily import all components used for routing
 const Home = React.lazy(() => import('./Component/Home.jsx'));
@@ -25,8 +26,8 @@ const Performence = React.lazy(() => import('./Component/Dashboard/performence.j
 function App() {
   return (
     <>
-      {/* Suspense wrapper */}
-      <React.Suspense fallback={<div className="loading-fallback">Loading, please wait...</div>}>
+      {/* Enhanced Suspense wrapper with beautiful loading */}
+      <Suspense fallback={<EnhancedLoading />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/details" element={<Details />} />
@@ -49,7 +50,7 @@ function App() {
           <Route path="/wishlist" element={<WishList />} />
           <Route path="*" element={<h1>Page Not Found</h1>} />
         </Routes>
-      </React.Suspense>
+      </Suspense>
     </>
   );
 }

@@ -65,7 +65,7 @@ export default function Details() {
            
             <CourseDetails data={data} />
             <Lessons data={data&&data.sections} id={data&&data._id} isOwner={isOwner}/>
-            <About data={data}/>
+            {/* <About data={data}/> */}
             <Teacher data={data&&data.teacher}/>
             <Reviews data={data}/>
             <Related />

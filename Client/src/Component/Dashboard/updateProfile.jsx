@@ -70,32 +70,32 @@ export default function UpdateProfile() {
         fetchData();
     }, []);
 
-    const styles = {
+    const muiStyles = {
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderColor: 'gray',
+                borderColor: '#4b5563',
             },
             '&:hover fieldset': {
-                borderColor: 'lightgray',
+                borderColor: '#60a5fa',
             },
             '&.Mui-focused fieldset': {
-                borderColor: 'white',
+                borderColor: '#3b82f6',
             },
             '& input': {
                 color: 'white',
             },
+            '& textarea': {
+                color: 'white',
+            },
+            backgroundColor: '#1f2937',
+            borderRadius: '8px',
         },
         '& .MuiInputLabel-root': {
-            color: 'white',
+            color: '#9ca3af',
         },
         '& .MuiInputLabel-root.Mui-focused': {
-            color: 'white',
+            color: '#60a5fa',
         },
-        marginBottom: '20px',
-        '& .MuiOutlinedInput-input': {
-            color: 'white',
-        },
-        width: '70%',
     };
 
     useEffect(() => {
@@ -162,45 +162,172 @@ export default function UpdateProfile() {
     }
 
     return (
-        <>
-            <div className="addCourse bg-gray-900 text-white p-8">
-                <h1 className="text-3xl m-4">{heading}</h1>
-                <div className="addCourseForm">
-                    <div className='upload w-80 flex justify-center mb-6'>
-                        <img src={url} className="rounded-full object-cover" alt="Profile" />
-                        <Button
-                            component="label"
-                            variant="contained"
-                            startIcon={<CloudUploadIcon />}
-                            name="dp"
-                            onChange={handleFileChange}
-                            sx={{ marginLeft: '20px', backgroundColor: 'gray' }}
-                        >
-                            Upload Profile Picture
-                            <VisuallyHiddenInput type="file" />
-                        </Button>
+        <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-400 mb-2">{heading}</h1>
+                <p className="text-gray-400">Fill out your profile information to get started</p>
+            </div>
+
+            {/* Profile Picture Section */}
+            <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+                <h2 className="text-xl font-semibold mb-4 text-blue-400">Profile Picture</h2>
+                <div className="flex flex-col sm:flex-row items-center gap-6">
+                    <div className="relative">
+                        <img 
+                            src={url} 
+                            className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-gray-600 shadow-lg" 
+                            alt="Profile" 
+                        />
+                        <div className="absolute -bottom-2 -right-2 bg-blue-600 rounded-full p-2">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                            </svg>
+                        </div>
                     </div>
-                    <TextField id="outlined-basic" name="fullname" value={profile.fullname} onChange={handleChange} label='Full Name' variant="outlined" sx={styles} className='inputtext' required />
-                    <TextField id="outlined-multiline-static" name="about" value={profile.about} onChange={handleChange} label="Write something about you" multiline rows={3} sx={styles} className='inputtext' required />
-                    <TextField id="outlined-basic" name="skills" value={skill} onChange={(e) => setSkill(e.target.value)} onKeyDown={addSkill} label='Add Skills' variant="outlined" sx={styles} className='inputtext' />
-                    <div className="showTags flex flex-wrap mt-4">
-                        {skills.map((t, index) => (
-                            <div key={index} className="oneTag bg-gray-800 text-white px-3 py-1 rounded-full flex items-center mr-2 mb-2">
-                                {t}
-                                <button name={t} onClick={deleteSkill} className="ml-2">
-                                    <i name={t} className="fa-solid fa-xmark flex self-center"></i>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                    <TextField id="outlined-basic" name="website" value={links.website} onChange={handleLinkChange} label='Website Link' variant="outlined" sx={styles} className='inputtext' />
-                    <TextField id="outlined-basic" name="twitter" value={links.twitter} onChange={handleLinkChange} label='Twitter Link' variant="outlined" sx={styles} className='inputtext' />
-                    <TextField id="outlined-basic" name="linkedin" value={links.linkedin} onChange={handleLinkChange} label='LinkedIn Link' variant="outlined" sx={styles} className='inputtext' />
-                    <Button type='submit' onClick={handleSubmit} disabled={!((url !== '') && (skills.length > 0))} variant="contained" size="medium" sx={{ backgroundColor: '#1f2937', marginTop: '20px' }}>
-                        SAVE
+                    <Button
+                        component="label"
+                        variant="contained"
+                        startIcon={<CloudUploadIcon />}
+                        onChange={handleFileChange}
+                        sx={{ 
+                            backgroundColor: '#3b82f6',
+                            '&:hover': { backgroundColor: '#2563eb' },
+                            py: 1.5,
+                            px: 3,
+                            borderRadius: '8px'
+                        }}
+                    >
+                        Upload New Picture
+                        <VisuallyHiddenInput type="file" accept="image/*" />
                     </Button>
                 </div>
             </div>
-        </>
+
+            {/* Basic Information */}
+            <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+                <h2 className="text-xl font-semibold mb-6 text-blue-400">Basic Information</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <TextField 
+                        name="fullname" 
+                        value={profile.fullname} 
+                        onChange={handleChange} 
+                        label='Full Name' 
+                        variant="outlined" 
+                        sx={muiStyles}
+                        fullWidth
+                        required 
+                    />
+                    <div className="lg:col-span-2">
+                        <TextField 
+                            name="about" 
+                            value={profile.about} 
+                            onChange={handleChange} 
+                            label="About You" 
+                            multiline 
+                            rows={4} 
+                            sx={muiStyles}
+                            fullWidth
+                            required 
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Skills Section */}
+            <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+                <h2 className="text-xl font-semibold mb-4 text-blue-400">Skills</h2>
+                <TextField 
+                    name="skills" 
+                    value={skill} 
+                    onChange={(e) => setSkill(e.target.value)} 
+                    onKeyDown={addSkill} 
+                    label='Add Skills (Press Enter to add)' 
+                    variant="outlined" 
+                    sx={muiStyles}
+                    fullWidth
+                    helperText="Press Enter after typing each skill"
+                    FormHelperTextProps={{ style: { color: '#9ca3af' } }}
+                />
+                {skills.length > 0 && (
+                    <div className="mt-4">
+                        <p className="text-sm text-gray-400 mb-3">Your Skills:</p>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.map((t, index) => (
+                                <div key={index} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full flex items-center gap-2 transition-colors">
+                                    <span className="text-sm font-medium">{t}</span>
+                                    <button 
+                                        name={t} 
+                                        onClick={deleteSkill} 
+                                        className="hover:bg-blue-800 rounded-full p-1 transition-colors"
+                                    >
+                                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Social Links */}
+            <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+                <h2 className="text-xl font-semibold mb-6 text-blue-400">Social Links</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <TextField 
+                        name="website" 
+                        value={links.website} 
+                        onChange={handleLinkChange} 
+                        label='Website' 
+                        variant="outlined" 
+                        sx={muiStyles}
+                        fullWidth
+                    />
+                    <TextField 
+                        name="linkedin" 
+                        value={links.linkedin} 
+                        onChange={handleLinkChange} 
+                        label='LinkedIn' 
+                        variant="outlined" 
+                        sx={muiStyles}
+                        fullWidth
+                    />
+                    <TextField 
+                        name="twitter" 
+                        value={links.twitter} 
+                        onChange={handleLinkChange} 
+                        label='Twitter' 
+                        variant="outlined" 
+                        sx={muiStyles}
+                        fullWidth
+                    />
+                </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end">
+                <Button 
+                    type='submit' 
+                    onClick={handleSubmit} 
+                    disabled={!((url !== '') && (skills.length > 0))} 
+                    variant="contained" 
+                    size="large"
+                    sx={{ 
+                        backgroundColor: '#3b82f6',
+                        '&:hover': { backgroundColor: '#2563eb' },
+                        '&:disabled': { backgroundColor: '#374151' },
+                        py: 1.5,
+                        px: 6,
+                        borderRadius: '8px',
+                        fontSize: '1.1rem',
+                        fontWeight: 600,
+                    }}
+                >
+                    SAVE PROFILE
+                </Button>
+            </div>
+        </div>
     );
 }

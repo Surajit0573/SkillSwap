@@ -12,21 +12,46 @@ import deleteTeacherIcon from "../../assets/deleteTeacher.png";
 import profileIcon from "../../assets/profile.png";
 import resetpasswordIcon from "../../assets/reset-password.png";
 
-function SidebarItem({ to, icon, label, onClick, isDanger }) {
+function SidebarItem({ to, icon, label, onClick, isDanger, onClose }) {
+  const handleClick = () => {
+    if (onClick) onClick();
+    if (onClose) onClose(); // Close sidebar on mobile after click
+  };
+
   return (
     <div
-      className={`p-4 text-2xl flex items-center ${isDanger ? 'text-red-600 border-red-600 hover:bg-red-500 hover:text-black' : 'hover:bg-blue-500'}`}
-      onClick={onClick}
+      className={`
+        group px-4 py-3 mx-2 rounded-lg transition-all duration-200
+        ${isDanger 
+          ? 'text-red-400 hover:bg-red-600 hover:text-white border border-red-600/30' 
+          : 'text-gray-300 hover:bg-blue-600 hover:text-white'
+        }
+        cursor-pointer
+      `}
+      onClick={handleClick}
     >
-      <NavLink to={to} className="flex items-center w-full">
-        <img src={icon} className="w-10 mr-4" alt={label} />
-        {label}
-      </NavLink>
+      {to ? (
+        <NavLink 
+          to={to} 
+          className={({ isActive }) => `
+            flex items-center w-full text-sm sm:text-base
+            ${isActive ? 'text-blue-400' : ''}
+          `}
+        >
+          <img src={icon} className="w-6 h-6 sm:w-8 sm:h-8 mr-3 opacity-80 group-hover:opacity-100" alt={label} />
+          <span className="font-medium">{label}</span>
+        </NavLink>
+      ) : (
+        <div className="flex items-center w-full text-sm sm:text-base">
+          <img src={icon} className="w-6 h-6 sm:w-8 sm:h-8 mr-3 opacity-80 group-hover:opacity-100" alt={label} />
+          <span className="font-medium">{label}</span>
+        </div>
+      )}
     </div>
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const navigate = useNavigate();
   const { isTeacher } = useContext(AppContext);
   const [isTeach, setIsTeach] = useState(false);
@@ -34,7 +59,6 @@ export default function Sidebar() {
   useEffect(() => {
     async function fetchData() {
       const curr = await isTeacher();
-      console.log(curr);
       setIsTeach(curr);
     }
     fetchData();
@@ -48,7 +72,6 @@ export default function Sidebar() {
           credentials: "include",
         });
         const result = await response.json();
-        console.log(result);
         if (result.ok) {
           setIsTeach(false);
           toast.success("You are removed as a teacher");
@@ -74,7 +97,6 @@ export default function Sidebar() {
           credentials: "include",
         });
         const result = await response.json();
-        console.log(result);
         if (result.ok) {
           setIsTeach(false);
           toast.success("Your account has been deleted");
@@ -93,21 +115,42 @@ export default function Sidebar() {
   }, [navigate]);
 
   return (
-    <div className="w-80 h-full bg-gray-800 flex flex-col justify-between text-left py-4">
-      <div className="flex flex-col">
-        <SidebarItem to="/dashboard/" icon={profileIcon} label="Update Profile" />
-        {!isTeach && <SidebarItem to="/dashboard/certificate" icon={certificateIcon} label="Certificates" />}
-        {!isTeach && <SidebarItem to="/dashboard/boughtCourses" icon={coursesIcon} label="My Courses" />}
-        {isTeach && <SidebarItem to="/dashboard/myCourses" icon={coursesIcon} label="My Courses" />}
-        {isTeach && <SidebarItem to="/dashboard/performence" icon={performenceIcon} label="Performance" />}
+    <div className="h-full bg-gray-800 border-r border-gray-700 flex flex-col shadow-xl">
+      {/* Close button for mobile */}
+      <div className="lg:hidden flex justify-end p-4">
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-white p-1"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
-      <div>
-        <SidebarItem to="/dashboard/account" icon={resetpasswordIcon} label="Change Password" />
+
+      {/* Header */}
+      <div className="p-4 border-b border-gray-700">
+        <h2 className="text-lg font-semibold text-blue-400">Dashboard</h2>
+      </div>
+
+      {/* Navigation Items */}
+      <div className="flex-1 py-4 space-y-2">
+        <SidebarItem to="/dashboard/" icon={profileIcon} label="Update Profile" onClose={onClose} />
+        {!isTeach && <SidebarItem to="/dashboard/certificate" icon={certificateIcon} label="Certificates" onClose={onClose} />}
+        {!isTeach && <SidebarItem to="/dashboard/boughtCourses" icon={coursesIcon} label="My Courses" onClose={onClose} />}
+        {isTeach && <SidebarItem to="/dashboard/myCourses" icon={coursesIcon} label="My Courses" onClose={onClose} />}
+        {isTeach && <SidebarItem to="/dashboard/performence" icon={performenceIcon} label="Performance" onClose={onClose} />}
+      </div>
+
+      {/* Bottom Actions */}
+      <div className="border-t border-gray-700 py-4 space-y-2">
+        <SidebarItem to="/dashboard/account" icon={resetpasswordIcon} label="Change Password" onClose={onClose} />
         {isTeach && (
           <SidebarItem
             icon={deleteTeacherIcon}
             label="Delete Instructor Account"
             onClick={deleteTeach}
+            onClose={onClose}
             isDanger
           />
         )}
@@ -115,9 +158,11 @@ export default function Sidebar() {
           icon={deleteAccountIcon}
           label="Delete Your Account"
           onClick={deleteAccount}
+          onClose={onClose}
           isDanger
         />
       </div>
+      
       <ToastContainer />
     </div>
   );
